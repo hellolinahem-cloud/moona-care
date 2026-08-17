@@ -394,8 +394,8 @@ body.night nav button.on{color:var(--gold)}
    CONFIG — replace these two lines with your own Supabase keys
    (Supabase dashboard → Project Settings → API)
 ============================================================ */
-const SUPABASE_URL = 'https://rxrmgqifpzjwgtqvlwpt.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_8YVfGqTLO6X02NgdW_FbUw_VxVVqwo9';
+const SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co';
+const SUPABASE_ANON_KEY = 'YOUR-ANON-PUBLIC-KEY';
 const TELEGRAM_BOT = 'MoonaCareBot';   // your bot's username, without the @
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
@@ -533,7 +533,14 @@ const $ = id => document.getElementById(id);
 const now = () => Date.now();
 const HOUR=3600000, DAY=86400000;
 const ts = v => new Date(v).getTime();
-const clock = v => { const d=new Date(v); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); };
+const clock = v => {
+  const d=new Date(v);
+  let h=d.getHours();
+  const m=String(d.getMinutes()).padStart(2,'0');
+  const ap = h<12 ? 'AM' : 'PM';
+  h = h%12 || 12;                      // 0 → 12 AM, 13 → 1 PM
+  return h+':'+m+' '+ap;
+};
 const dstr = v => new Date(v).toLocaleDateString(LANG==='kh'?'km-KH':'en-GB',{day:'numeric',month:'short'});
 function dur(ms){ if(ms<0)ms=0; const mi=Math.floor(ms/60000),hr=Math.floor(mi/60); return hr<1?mi+t('m'):hr+t('h')+' '+(mi%60)+t('m'); }
 function durS(ms){ const mi=Math.floor(ms/60000),hr=Math.floor(mi/60),dd=Math.floor(hr/24); return dd>=1?dd+t('d'):hr>=1?hr+t('h'):mi+t('m'); }
@@ -866,8 +873,8 @@ function labelSheet(b){
     $('printArea').innerHTML=`<div class="plabel">
       <div class="pn">${night?'☾':'☀'} ${labelNo(b)}</div>
       <div class="pr">${BABY.name} · ${b.ml} ml · ${night?t('nightMilk'):t('dayMilk')}</div>
-      <div class="pr">${t('expressedAt')}: ${new Date(b.expressed_at).toLocaleString()}</div>
-      <div class="pr"><b>${t('useBy')}: ${new Date(ex).toLocaleString()}</b></div>
+      <div class="pr">${t('expressedAt')}: ${dstr(b.expressed_at)} ${clock(b.expressed_at)}</div>
+      <div class="pr"><b>${t('useBy')}: ${dstr(ex)} ${clock(ex)}</b></div>
       <div class="pr">Moona Care</div></div>`;
     window.print();
   };
