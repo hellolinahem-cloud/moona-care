@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2E3B36">
+<title>Moona Care</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sage:#2E3B36; --gold:#C9A46A; --cream:#FAF7F2;
+  --bg:#FAF7F2; --surface:#FFFFFF; --raised:#F2EDE4; --line:#E3DBCD;
+  --text:#2E3B36; --mute:#7C8A83;
+  --leaf:#5F8C72; --clay:#C2705C; --dusk:#7B86AE;
+  --pad:16px;
+}
+body.night{
+  --bg:#131C18; --surface:#1B2621; --raised:#222E28; --line:#2E3D35;
+  --text:#EDE3D2; --mute:#8B978D; --cream:#EDE3D2;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'Kantumruy Pro',system-ui,sans-serif; font-size:15px; line-height:1.5;
+  padding-bottom:92px; -webkit-font-smoothing:antialiased;
+  transition:background .3s,color .3s;
+}
+.serif{font-family:'Fraunces',Georgia,serif}
+.wrap{max-width:520px;margin:0 auto;padding:0 var(--pad)}
+.hide{display:none!important}
+
+/* ---------- auth ---------- */
+#auth{position:fixed;inset:0;z-index:80;background:var(--bg);overflow-y:auto;padding:0 var(--pad) 48px}
+#auth .inner{max-width:400px;margin:0 auto;padding-top:11vh}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.logo .glyph{width:42px;height:42px;border-radius:50%;background:var(--sage);position:relative;flex:none}
+.logo .glyph:after{content:"";position:absolute;width:30px;height:30px;border-radius:50%;background:var(--gold);top:2px;right:-2px;
+  -webkit-mask:radial-gradient(circle at 2px 50%,transparent 13px,#000 13.5px);mask:radial-gradient(circle at 2px 50%,transparent 13px,#000 13.5px)}
+.logo h1{font-family:'Fraunces',serif;font-size:25px;font-weight:600;margin:0;letter-spacing:-.02em}
+.logo p{margin:0;font-size:11.5px;color:var(--mute);letter-spacing:.04em}
+h2.big{font-family:'Fraunces',serif;font-size:26px;font-weight:600;margin:0 0 6px;letter-spacing:-.02em;line-height:1.2}
+p.lede{color:var(--mute);font-size:13.5px;margin:0 0 22px;line-height:1.6}
+
+label.f{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:14px 0 6px;font-weight:600}
+input,select,textarea{width:100%;background:var(--surface);border:1px solid var(--line);color:var(--text);
+  border-radius:12px;padding:13px;font-family:inherit;font-size:15.5px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:1px}
+.btn{width:100%;background:var(--sage);color:var(--cream);border:0;border-radius:13px;padding:15px;
+  font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;margin-top:18px}
+body.night .btn{background:var(--gold);color:#16211D}
+.btn:active{transform:scale(.985)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text);margin-top:10px}
+.btn:disabled{opacity:.5}
+.link{background:none;border:0;color:var(--mute);font-family:inherit;font-size:13px;text-decoration:underline;
+  cursor:pointer;display:block;margin:18px auto 0;padding:6px}
+.err{background:rgba(194,112,92,.12);border:1px solid var(--clay);color:var(--clay);border-radius:11px;
+  padding:11px;font-size:13px;margin-top:14px}
+
+/* ---------- header ---------- */
+header{display:flex;align-items:center;gap:9px;padding:16px 0 6px}
+header .who{flex:1;min-width:0}
+header .who h1{font-family:'Fraunces',serif;margin:0;font-size:19px;font-weight:600;letter-spacing:-.015em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header .who p{margin:0;font-size:11.5px;color:var(--mute)}
+.chip{background:var(--surface);border:1px solid var(--line);color:var(--text);border-radius:999px;
+  padding:7px 12px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;flex:none}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--leaf);display:inline-block;margin-right:5px;vertical-align:1px}
+.live-dot.off{background:var(--clay)}
+
+/* ---------- hero ---------- */
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:22px 18px 16px}
+.dial{position:relative;width:186px;height:186px;margin:0 auto}
+.dial svg{transform:rotate(-90deg);display:block}
+.dial .face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 26px}
+.eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+.dial .big{font-family:'Fraunces',serif;font-size:44px;font-weight:600;line-height:1;margin:5px 0 3px;letter-spacing:-.035em}
+.dial .sub{font-size:11.5px;color:var(--mute);line-height:1.35}
+.pill{display:inline-block;margin-top:7px;padding:3px 10px;border-radius:999px;font-size:10.5px;font-weight:700;
+  background:rgba(201,164,106,.18);color:#8A6E38}
+body.night .pill{color:var(--gold)}
+.glance{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.glance div{background:var(--raised);border-radius:13px;padding:9px 6px;text-align:center}
+.glance b{display:block;font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:-.02em}
+.glance span{font-size:10px;color:var(--mute);display:block;margin-top:1px}
+
+.taps{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+.tap{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:19px;padding:15px 14px;
+  text-align:left;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-height:74px;justify-content:center}
+.tap:active{transform:scale(.97)}
+.tap .t{font-size:15.5px;font-weight:600}
+.tap .s{font-size:11px;color:var(--mute)}
+.tap.on{border-color:var(--gold);background:rgba(201,164,106,.1)}
+.tap.on .s{color:#8A6E38;font-weight:600}
+body.night .tap.on .s{color:var(--gold)}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:1px}
+
+h2.sec{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:24px 0 9px;
+  font-weight:600;display:flex;align-items:center;gap:8px}
+h2.sec:after{content:"";flex:1;height:1px;background:var(--line)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:17px;padding:13px}
+
+.row{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .ic{width:33px;height:33px;border-radius:11px;flex:none;display:grid;place-items:center;font-size:15px;background:var(--raised)}
+.row .bd{flex:1;min-width:0}
+.row .bd b{display:block;font-size:14px;font-weight:600}
+.row .bd span{font-size:11px;color:var(--mute)}
+.row .rt{font-size:11.5px;color:var(--mute);text-align:right;flex:none;font-family:'Fraunces',serif}
+.by{font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:5px;background:var(--raised);color:var(--mute);margin-left:6px;vertical-align:1.5px}
+.empty{text-align:center;padding:24px 10px;color:var(--mute);font-size:12.5px}
+.empty b{display:block;color:var(--text);font-size:14px;margin-bottom:3px;font-weight:600}
+
+/* ---------- milk label card (signature) ---------- */
+.tag{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 15px;margin-bottom:9px;
+  display:flex;gap:13px;align-items:stretch;overflow:hidden}
+.tag.spent{opacity:.45}
+.tag .phase{width:44px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border-right:1px dashed var(--line);padding-right:12px}
+.tag .phase .sym{font-size:21px;line-height:1}
+.tag .phase .lb{font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin-top:4px;text-align:center}
+.tag .main{flex:1;min-width:0}
+.tag .no{font-family:'Fraunces',serif;font-size:19px;font-weight:600;letter-spacing:.02em}
+.tag .no small{font-size:12px;color:var(--mute);font-weight:400;margin-left:5px;letter-spacing:0}
+.tag .meta{font-size:11.5px;color:var(--mute);margin-top:2px}
+.tag .life{margin-top:8px}
+.bar{height:5px;border-radius:3px;background:var(--raised);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:3px;background:var(--leaf);transition:width .3s}
+.bar.warn i{background:var(--gold)} .bar.bad i{background:var(--clay)}
+.lifeTxt{font-size:10.5px;color:var(--mute);margin-top:4px;display:flex;justify-content:space-between;gap:8px}
+.tag .acts{display:flex;flex-direction:column;gap:5px;justify-content:center;flex:none}
+.mini{border:1px solid var(--line);background:var(--raised);color:var(--text);border-radius:9px;padding:6px 9px;
+  font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap}
+.mini:active{transform:scale(.95)}
+.mini.warn{color:var(--clay)}
+.first{border:1px dashed var(--leaf);color:var(--leaf);border-radius:12px;padding:9px 11px;margin-bottom:10px;font-size:12px}
+.sumline{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.sumline div{background:var(--raised);border-radius:13px;padding:10px;text-align:center}
+.sumline b{display:block;font-family:'Fraunces',serif;font-size:19px;font-weight:600}
+.sumline span{font-size:10px;color:var(--mute)}
+
+/* printable label */
+#printArea{display:none}
+@media print{
+  body>*{display:none!important}
+  #printArea{display:block!important;position:static}
+  .plabel{width:70mm;border:1.2pt dashed #444;border-radius:4mm;padding:5mm;margin:0 0 6mm;font-family:Georgia,serif;color:#000}
+  .plabel .pn{font-size:20pt;font-weight:700}
+  .plabel .pr{font-size:10pt;margin-top:1.5mm}
+}
+
+/* ---------- NSSF visits ---------- */
+.sumline.three{grid-template-columns:repeat(3,1fr)}
+.sumline.three b{font-size:17px}
+.nv{background:var(--surface);border:1px solid var(--line);border-radius:15px;
+  margin-bottom:8px;width:100%;text-align:left;font-family:inherit;color:var(--text);overflow:hidden}
+.nvmain{display:flex;gap:12px;align-items:center;padding:12px 13px;cursor:pointer;width:100%;
+  background:none;border:0;font-family:inherit;color:inherit;text-align:left}
+.nvmain:active{opacity:.7}
+.nvact{display:flex;gap:7px;padding:0 13px 12px}
+.nvact button{flex:1;border:1px solid var(--line);background:var(--raised);color:var(--text);border-radius:10px;
+  padding:9px 6px;font-size:12.5px;font-weight:600;font-family:inherit;cursor:pointer}
+.nvact button:active{transform:scale(.97)}
+.nvact button.go{border-color:var(--leaf);color:var(--leaf)}
+.nvact button.no{border-color:var(--line);color:var(--mute)}
+.nv.open{border-color:var(--gold);background:rgba(201,164,106,.09)}
+.nv.miss{border-color:var(--clay)}
+.nv.gone{opacity:.5}
+.nv .seq{width:32px;height:32px;border-radius:10px;flex:none;display:grid;place-items:center;
+  font-family:'Fraunces',serif;font-size:14px;font-weight:600;background:var(--raised);color:var(--mute)}
+.nv.gone .seq{background:var(--leaf);color:#fff}
+.nv .mn{flex:1;min-width:0}
+.nv .mn b{display:block;font-size:13.5px;font-weight:600}
+.nv .mn span{font-size:11px;color:var(--mute)}
+.nv .amt{font-family:'Fraunces',serif;font-size:15px;font-weight:600;flex:none}
+.st{font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:5px;margin-left:6px;white-space:nowrap}
+.st.now{background:rgba(201,164,106,.22);color:#8A6E38}
+body.night .st.now{color:var(--gold)}
+.st.miss{background:rgba(194,112,92,.15);color:var(--clay)}
+.st.est{background:var(--raised);color:var(--mute)}
+.st.ok{background:rgba(95,140,114,.16);color:var(--leaf)}
+
+/* ---------- vaccines ---------- */
+.vx{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.vx:last-child{border-bottom:0}
+.tick{width:25px;height:25px;border-radius:8px;border:1.5px solid var(--line);background:transparent;flex:none;
+  cursor:pointer;display:grid;place-items:center;font-size:13px;color:transparent;margin-top:1px}
+.tick.on{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.vx .in{flex:1;min-width:0}
+.vx .in b{font-size:13.5px;font-weight:600;display:block}
+.vx .in span{font-size:11px;color:var(--mute)}
+.vx.done .in b{color:var(--mute);text-decoration:line-through}
+.tg{font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:5px;margin-left:6px}
+.tg.due{background:rgba(194,112,92,.15);color:var(--clay)}
+.tg.soon{background:rgba(201,164,106,.2);color:#8A6E38}
+body.night .tg.soon{color:var(--gold)}
+
+.seg{display:flex;gap:6px}
+.seg button{flex:1;background:var(--surface);border:1px solid var(--line);color:var(--text);border-radius:12px;
+  padding:13px 4px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.seg button.on{background:var(--sage);border-color:var(--sage);color:var(--cream)}
+body.night .seg button.on{background:var(--gold);color:#16211D}
+.legal{display:block;text-align:center;font-size:12.5px;color:var(--mute);padding:7px;text-decoration:underline}
+.note{font-size:11px;color:var(--mute);line-height:1.55;margin-top:10px}
+
+/* ---------- sheet / nav / toast ---------- */
+.scrim{position:fixed;inset:0;background:rgba(20,28,24,.55);backdrop-filter:blur(3px);z-index:40;display:none}
+.scrim.open{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--bg);border-top:1px solid var(--line);
+  border-radius:24px 24px 0 0;padding:8px 18px 32px;max-height:88vh;overflow-y:auto;
+  transform:translateY(100%);transition:transform .22s cubic-bezier(.3,.8,.4,1);max-width:520px;margin:0 auto}
+.sheet.open{transform:translateY(0)}
+.grab{width:36px;height:4px;border-radius:2px;background:var(--line);margin:6px auto 14px}
+.sheet h3{font-family:'Fraunces',serif;margin:0 0 3px;font-size:20px;font-weight:600}
+
+nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);
+  display:flex;padding:7px 4px calc(7px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto}
+nav button{flex:1;background:none;border:0;color:var(--mute);font-family:inherit;font-size:10px;font-weight:600;
+  cursor:pointer;padding:4px 2px;display:flex;flex-direction:column;align-items:center;gap:3px}
+nav button .ic2{font-size:16px;line-height:1}
+nav button.on{color:var(--sage)}
+body.night nav button.on{color:var(--gold)}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%) translateY(18px);bottom:92px;z-index:60;background:var(--sage);
+  color:var(--cream);border-radius:13px;padding:11px 15px;font-size:13px;display:flex;align-items:center;gap:12px;
+  opacity:0;pointer-events:none;transition:.2s;box-shadow:0 10px 30px rgba(0,0,0,.22);max-width:90vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+.toast button{background:none;border:0;color:var(--gold);font-family:inherit;font-weight:700;font-size:13px;cursor:pointer;padding:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ================= AUTH ================= -->
+<div id="auth">
+  <div class="inner">
+    <div class="logo"><div class="glyph"></div>
+      <div><h1>Moona Care</h1><p id="tagline">Gentle Care, Growing Love</p></div></div>
+    <div id="authBody"></div>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div class="wrap hide" id="app">
+  <header>
+    <div class="who"><h1 id="babyName">Baby</h1><p id="babySub"></p></div>
+    <button class="chip" id="langBtn">EN</button>
+    <button class="chip" id="nightBtn">☾</button>
+  </header>
+
+  <section id="t-today">
+    <div class="hero">
+      <div class="dial">
+        <svg width="186" height="186" viewBox="0 0 186 186">
+          <circle cx="93" cy="93" r="82" fill="none" stroke="var(--raised)" stroke-width="9"/>
+          <circle id="arc" cx="93" cy="93" r="82" fill="none" stroke="var(--gold)" stroke-width="9"
+                  stroke-linecap="round" stroke-dasharray="515.2" stroke-dashoffset="515.2"/>
+        </svg>
+        <div class="face">
+          <div class="eyebrow" data-t="sinceFeed"></div>
+          <div class="big" id="sinceBig">—</div>
+          <div class="sub" id="sinceSub"></div>
+          <div class="pill hide" id="sidePill"></div>
+        </div>
+      </div>
+      <div class="glance">
+        <div><b id="gF">0</b><span data-t="feedsToday"></span></div>
+        <div><b id="gD">0</b><span data-t="diapersToday"></span></div>
+        <div><b id="gS">0h</b><span data-t="sleepToday"></span></div>
+      </div>
+    </div>
+
+    <div class="taps">
+      <button class="tap" id="bFeed"><span class="t"><i class="dot" style="background:var(--gold)"></i><span data-t="feed"></span></span><span class="s" data-t="tapStart"></span></button>
+      <button class="tap" id="bSleep"><span class="t"><i class="dot" style="background:var(--dusk)"></i><span data-t="sleep"></span></span><span class="s" data-t="tapStart"></span></button>
+      <button class="tap" id="bDiaper"><span class="t"><i class="dot" style="background:var(--leaf)"></i><span data-t="diaper"></span></span><span class="s" data-t="tapLog"></span></button>
+      <button class="tap" id="bPump"><span class="t"><i class="dot" style="background:var(--clay)"></i><span data-t="pump"></span></span><span class="s" data-t="tapLog"></span></button>
+    </div>
+
+    <h2 class="sec"><span data-t="upNext"></span></h2>
+    <div class="card" id="nextCard"></div>
+    <h2 class="sec"><span data-t="todayLog"></span></h2>
+    <div class="card" id="logCard"></div>
+    <button class="btn ghost" id="copyBtn" data-t="copyDay"></button>
+  </section>
+
+  <section id="t-milk" class="hide">
+    <h2 class="sec"><span data-t="milkStore"></span></h2>
+    <div class="sumline">
+      <div><b id="mTot">0</b><span data-t="mlStored"></span></div>
+      <div><b id="mCnt">0</b><span data-t="bagsStored"></span></div>
+    </div>
+    <div id="stashList"></div>
+    <button class="btn ghost" id="addMilkBtn" data-t="addMilk"></button>
+    <div class="note" data-t="milkNote"></div>
+  </section>
+
+  <section id="t-vax" class="hide">
+    <h2 class="sec"><span data-t="vaccines"></span></h2>
+    <div class="card" id="vaxCard"></div>
+    <h2 class="sec"><span data-t="appts"></span></h2>
+    <div class="card" id="apptCard"></div>
+    <button class="btn ghost" id="addApptBtn" data-t="addAppt"></button>
+    <div class="note" data-t="vaxNote"></div>
+  </section>
+
+  <section id="t-nssf" class="hide">
+    <h2 class="sec"><span data-t="nssfTitle"></span></h2>
+    <div class="sumline three">
+      <div><b id="nGot">$0</b><span data-t="received"></span></div>
+      <div><b id="nSoon">$0</b><span data-t="stillToCome"></span></div>
+      <div><b id="nLost">$0</b><span data-t="missedAmt"></span></div>
+    </div>
+    <div id="nssfList"></div>
+    <button class="btn" id="addNssf" data-t="addVisits"></button>
+    <div class="note" data-t="nssfNote"></div>
+  </section>
+
+  <section id="t-health" class="hide">
+    <h2 class="sec"><span data-t="medTemp"></span></h2>
+    <div class="card" id="medCard"></div>
+    <div class="taps" style="margin-top:9px">
+      <button class="tap" id="bTemp"><span class="t">🌡️ <span data-t="temp"></span></span><span class="s" data-t="tapLog"></span></button>
+      <button class="tap" id="bMed"><span class="t">💊 <span data-t="medicine"></span></span><span class="s" data-t="tapLog"></span></button>
+    </div>
+    <h2 class="sec"><span data-t="growth"></span></h2>
+    <div class="card" id="growthCard"></div>
+    <button class="btn ghost" id="addGrowthBtn" data-t="addGrowth"></button>
+  </section>
+
+  <section id="t-set" class="hide">
+    <h2 class="sec"><span data-t="family"></span></h2>
+    <div class="card">
+      <div class="row" style="padding-top:0">
+        <div class="ic">👨‍👩‍👧</div>
+        <div class="bd"><b id="inviteCode">—</b><span data-t="inviteL"></span></div>
+        <button class="mini" id="copyCode" data-t="copyW"></button>
+      </div>
+      <div class="row"><div class="ic">✉️</div><div class="bd"><b id="myEmail">—</b><span id="myName"></span></div></div>
+      <div class="note" data-t="familyNote"></div>
+    </div>
+
+    <h2 class="sec"><span data-t="alerts"></span></h2>
+    <div class="card" id="tgCard"></div>
+
+    <h2 class="sec"><span data-t="babyDetails"></span></h2>
+    <div class="card">
+      <label class="f" data-t="babyNameL"></label><input id="sName">
+      <label class="f" data-t="dobL"></label><input id="sDob" type="date">
+      <label class="f" data-t="gapL"></label><input id="sGap" type="number" min="1" max="8" step="0.5">
+      <button class="btn" id="saveBaby" data-t="save"></button>
+    </div>
+
+    <h2 class="sec"><span data-t="account"></span></h2>
+    <div class="card">
+      <button class="mini" id="exportBtn" style="width:100%;padding:12px" data-t="exportAll"></button>
+      <div style="height:8px"></div>
+      <button class="mini warn" id="signOut" style="width:100%;padding:12px" data-t="signOut"></button>
+      <div style="height:14px"></div>
+      <a href="privacy.html" class="legal" data-t="privacyL"></a>
+      <a href="terms.html" class="legal" data-t="termsL"></a>
+      <div style="height:10px"></div>
+      <button class="mini warn" id="delAcct" style="width:100%;padding:12px" data-t="deleteAcct"></button>
+      <div class="note" data-t="deleteNote"></div>
+    </div>
+    <div class="note" style="text-align:center;margin:18px 0 0" id="brandFoot">Moona Care · MoonaBaby</div>
+  </section>
+</div>
+
+<nav class="hide" id="nav">
+  <button data-tab="today" class="on"><span class="ic2">◑</span><span data-t="navToday"></span></button>
+  <button data-tab="milk"><span class="ic2">🍼</span><span data-t="navMilk"></span></button>
+  <button data-tab="vax"><span class="ic2">💉</span><span data-t="navVax"></span></button>
+  <button data-tab="nssf"><span class="ic2">៛</span><span data-t="navNssf"></span></button>
+  <button data-tab="health"><span class="ic2">🌡️</span><span data-t="navHealth"></span></button>
+  <button data-tab="set"><span class="ic2">⚙︎</span><span data-t="navSet"></span></button>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
+<div class="toast" id="toast"><span id="toastMsg"></span><button id="toastAct"></button></div>
+<div id="printArea"></div>
+
+<script type="module">
+/* ============================================================
+   CONFIG — replace these two lines with your own Supabase keys
+   (Supabase dashboard → Project Settings → API)
+============================================================ */
+const SUPABASE_URL = 'https://rxrmgqifpzjwgtqvlwpt.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_8YVfGqTLO6X02NgdW_FbUw_VxVVqwo9';
+const TELEGRAM_BOT = 'MoonaCareBot';   // your bot's username, without the @
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ---------------- i18n ---------------- */
+const D = {
+  tagline:['Gentle Care, Growing Love','ថែទាំដោយទន់ភ្លន់ ស្រលាញ់ដុះដាល'],
+  signIn:['Sign in','ចូលគណនី'], signUp:['Create account','បង្កើតគណនី'],
+  email:['Email','អ៊ីមែល'], password:['Password','ពាក្យសម្ងាត់'], yourName:['Your name','ឈ្មោះរបស់អ្នក'],
+  haveAcct:['I already have an account','ខ្ញុំមានគណនីរួចហើយ'], noAcct:['Create a new account','បង្កើតគណនីថ្មី'],
+  welcome:['Welcome back','សូមស្វាគមន៍ត្រឡប់មកវិញ'],
+  welcomeNew:['Track every feed, nap and vaccine — together','តាមដានការបំបៅ ការគេង និងវ៉ាក់សាំង ជាមួយគ្នា'],
+  authLede:['Free for every family in Cambodia. Your records stay private to your family.','ឥតគិតថ្លៃសម្រាប់គ្រួសារទាំងអស់នៅកម្ពុជា។ កំណត់ត្រារបស់អ្នកឯកជនសម្រាប់គ្រួសារអ្នកតែប៉ុណ្ណោះ។'],
+  setupTitle:['Set up your family','រៀបចំគ្រួសាររបស់អ្នក'],
+  setupLede:['One parent creates the family, the other joins with the code.','ឪពុកម្តាយម្នាក់បង្កើតគ្រួសារ ម្នាក់ទៀតចូលរួមដោយប្រើលេខកូដ។'],
+  createFam:['Create a family','បង្កើតគ្រួសារ'], joinFam:['Join with a code','ចូលរួមដោយលេខកូដ'],
+  famName:['Family name','ឈ្មោះគ្រួសារ'], inviteCodeL:['Invite code','លេខកូដអញ្ជើញ'],
+  babyNameL:["Baby's name",'ឈ្មោះទារក'], dobL:['Date of birth','ថ្ងៃខែឆ្នាំកំណើត'],
+  gapL:['Expected gap between feeds (hours)','គម្លាតរវាងការបំបៅ (ម៉ោង)'],
+  start:['Start','ចាប់ផ្តើម'], join:['Join','ចូលរួម'], back:['Back','ត្រឡប់'],
+  sinceFeed:['Since last feed','ចាប់តាំងពីបំបៅចុងក្រោយ'], noFeed:['No feed logged yet','មិនទាន់មានកំណត់ត្រា'],
+  feedsToday:['Feeds today','បំបៅថ្ងៃនេះ'], diapersToday:['Diapers today','កន្ទបថ្ងៃនេះ'], sleepToday:['Sleep today','គេងថ្ងៃនេះ'],
+  feed:['Feed','បំបៅ'], sleep:['Sleep','គេង'], diaper:['Diaper','កន្ទប'], pump:['Pump milk','បូមទឹកដោះ'],
+  tapStart:['Tap to start','ចុចដើម្បីចាប់ផ្តើម'], tapLog:['Tap to log','ចុចដើម្បីកត់ត្រា'],
+  upNext:['Up next','បន្ទាប់'], todayLog:["Today's log",'កំណត់ត្រាថ្ងៃនេះ'], copyDay:['Copy summary','ចម្លងសង្ខេប'],
+  milkStore:['Milk store','ស្តុកទឹកដោះ'], mlStored:['ml in store','ml ក្នុងស្តុក'], bagsStored:['bags','ថង់'],
+  addMilk:['Add a bag of milk','បន្ថែមថង់ទឹកដោះ'],
+  vaccines:['Vaccine schedule','កាលវិភាគវ៉ាក់សាំង'], appts:['Appointments','ការណាត់ជួប'], addAppt:['Add a reminder','បន្ថែមការរំលឹក'],
+  medTemp:['Medicine & temperature','ថ្នាំ និងសីតុណ្ហភាព'], temp:['Temperature','សីតុណ្ហភាព'], medicine:['Medicine','ថ្នាំ'],
+  growth:['Growth','ការលូតលាស់'], addGrowth:['Add weight & height','បន្ថែមទម្ងន់ និងកម្ពស់'],
+  family:['Family','គ្រួសារ'], inviteL:['Invite code — share with the other parent','លេខកូដអញ្ជើញ — ចែករំលែកជាមួយឪពុកម្តាយម្នាក់ទៀត'],
+  copyW:['Copy','ចម្លង'], babyDetails:['Baby details','ព័ត៌មានទារក'], account:['Account','គណនី'],
+  save:['Save','រក្សាទុក'], signOut:['Sign out','ចាកចេញ'], exportAll:['Copy all records','ចម្លងកំណត់ត្រាទាំងអស់'],
+  navToday:['Today','ថ្ងៃនេះ'], navMilk:['Milk','ទឹកដោះ'], navVax:['Vaccines','វ៉ាក់សាំង'], navHealth:['Health','សុខភាព'], navSet:['Settings','កំណត់'],
+  left:['Left','ឆ្វេង'], right:['Right','ស្តាំ'], bottle:['Bottle','ដប'], solid:['Solid food','អាហាររឹង'], breast:['Breastfeed','បំបៅដោះ'],
+  wet:['Wet','ទឹកនោម'], dirty:['Dirty','លាមក'], both:['Both','ទាំងពីរ'],
+  stop:['Stop','បញ្ឈប់'], running:['Timer running','កំពុងកត់ម៉ោង'], saved:['Saved','បានរក្សាទុក'], copied:['Copied','បានចម្លង'],
+  undo:['Undo','មិនធ្វើវិញ'], ago:['ago','មុន'], due:['DUE','ដល់ពេល'], soon:['SOON','ជិតដល់'],
+  nothing:['Nothing logged yet','មិនទាន់មានអ្វីទេ'], tapAbove:['Tap a button above to begin','ចុចប៊ូតុងខាងលើ'],
+  allDone:['All caught up','គ្រប់យ៉ាងរួចរាល់'], nextVax:['Next vaccine','វ៉ាក់សាំងបន្ទាប់'],
+  noBags:['No milk in store','គ្មានទឹកដោះក្នុងស្តុក'], noBagsHint:['Add a bag after you pump and it gets a number and a use-by date.','បន្ថែមថង់បន្ទាប់ពីបូម វានឹងទទួលបានលេខ និងថ្ងៃផុតកំណត់។'],
+  useFirst:['Use this bag first','ប្រើថង់នេះមុនគេ'],
+  room:['Room','បន្ទប់'], fridge:['Fridge','ទូទឹកកក'], freezer:['Freezer','ទូបង្កក'], thawed:['Thawed','រំលាយរួច'],
+  day:['Day','ថ្ងៃ'], night:['Night','យប់'], dayMilk:['Day milk','ទឹកដោះពេលថ្ងៃ'], nightMilk:['Night milk','ទឹកដោះពេលយប់'],
+  expired:['Past its date','ផុតកំណត់'], useBy:['Use by','ប្រើមុន'], stored:['stored','ទុកបាន'],
+  used:['Used','ប្រើហើយ'], move:['Move','ផ្លាស់ទី'], label:['Label','ស្លាក'], print:['Print label','បោះពុម្ពស្លាក'],
+  amount:['Amount (ml)','បរិមាណ (ml)'], expressedAt:['Expressed at','បូបនៅម៉ោង'], storeWhere:['Store where?','រក្សាទុកនៅឯណា?'],
+  whichPhase:['Day or night milk?','ទឹកដោះពេលថ្ងៃ ឬយប់?'],
+  title:['What is it?','អ្វី?'], date:['Date','កាលបរិច្ឆេទ'], time:['Time','ម៉ោង'],
+  weight:['Weight (kg)','ទម្ងន់ (kg)'], height:['Height (cm)','កម្ពស់ (cm)'], headC:['Head (cm)','ក្បាល (cm)'],
+  dose:['Dose','ដូស'], every:['Repeat every (hours)','រៀងរាល់ (ម៉ោង)'], nextDose:['next dose after','ដូសបន្ទាប់ក្រោយ'],
+  noMed:['Nothing logged','គ្មានកំណត់ត្រា'], noGrowth:['No measurements yet','មិនទាន់មានការវាស់'],
+  d:['d','ថ្ងៃ'], h:['h','ម៉ោង'], m:['m','នាទី'], old:['old','អាយុ'], forT:['for','រយៈពេល'],
+  overdue:['overdue','ហួសកំណត់'], inT:['in','ក្នុងរយៈពេល'], addDob:['Add date of birth in Settings','បញ្ចូលថ្ងៃកំណើតក្នុងការកំណត់'],
+  familyNote:['Anyone who signs in and enters this code joins your family and sees these records. Only share it with people caring for your baby.','អ្នកណាដែលបញ្ចូលលេខកូដនេះនឹងឃើញកំណត់ត្រាទាំងនេះ។ សូមចែករំលែកតែជាមួយអ្នកថែទាំទារកប៉ុណ្ណោះ។'],
+  milkNote:['Guide only: about 4 hours at room temperature, 4 days in a fridge, 6 months in a freezer, and 24 hours once thawed in a fridge. Milk expressed at night naturally carries more of the hormones that help a baby settle, so night milk is best given at night. Ask your health centre if you are unsure.','ជាការណែនាំ៖ ប្រហែល ៤ ម៉ោងនៅសីតុណ្ហភាពបន្ទប់ ៤ ថ្ងៃក្នុងទូទឹកកក ៦ ខែក្នុងទូបង្កក និង ២៤ ម៉ោងបន្ទាប់ពីរំលាយ។ ទឹកដោះដែលបូបពេលយប់មានអរម៉ូនជួយឲ្យទារកងងុយគេង ដូច្នេះគួរឲ្យផឹកពេលយប់។ សូមសួរមណ្ឌលសុខភាពប្រសិនបើមិនច្បាស់។'],
+  vaxNote:['Dates are calculated from the date of birth using Cambodia\u2019s routine schedule. Always check against the yellow card from your health centre.','កាលបរិច្ឆេទគណនាតាមកាលវិភាគជាតិកម្ពុជា។ សូមផ្ទៀងផ្ទាត់ជាមួយសៀវភៅលឿងពីមណ្ឌលសុខភាព។'],
+  nssfTitle:['NSSF check-up money (ប.ស.ស)','ប្រាក់ពិនិត្យសុខភាព ប.ស.ស'],
+  navNssf:['ប.ស.ស','ប.ស.ស'],
+  received:['received','បានទទួល'], stillToCome:['still to come','នៅសល់'], missedAmt:['missed','ខកខាន'],
+  visitNo:['Visit','ការណាត់លេខ'], apptDate:['Appointment date (ណាត់)','កាលបរិច្ឆេទណាត់'],
+  windowEnd:['Last day it still counts','ថ្ងៃចុងក្រោយដែលនៅទទួលបាន'],
+  amountKhr:['Money for this visit (riel)','ប្រាក់សម្រាប់ការណាត់នេះ (រៀល)'],
+  alerts:['Reminders','ការរំលឹក'],
+  tgConnect:['Connect Telegram','តភ្ជាប់ Telegram'],
+  tgWhy:['Get a private message when stored milk is about to expire, a vaccination is due, or an NSSF window opens.','ទទួលសារឯកជននៅពេលទឹកដោះជិតផុតកំណត់ វ៉ាក់សាំងដល់ពេល ឬពេលកំណត់ ប.ស.ស បើក។'],
+  tgPrivate:['Messages go only to your own Telegram chat with the bot. Nobody else can see them, and the bot cannot read your other chats.','សារផ្ញើទៅតែការជជែកឯកជនរបស់អ្នកជាមួយ bot ប៉ុណ្ណោះ។ គ្មាននរណាម្នាក់ផ្សេងឃើញទេ ហើយ bot មិនអាចអានការជជែកផ្សេងរបស់អ្នកបានទេ។'],
+  tgOn:['Telegram connected','Telegram តភ្ជាប់រួច'],
+  tgOff:['Disconnect','ផ្តាច់'],
+  tgOpening:['Opening Telegram…','កំពុងបើក Telegram…'],
+  tgManual:['If Telegram did not open, tap here','បើ Telegram មិនបើក សូមចុចទីនេះ'],
+  tgMilk:['Milk about to expire','ទឹកដោះជិតផុតកំណត់'],
+  tgVax:['Vaccination due','វ៉ាក់សាំងដល់ពេល'],
+  tgNssf:['NSSF visit and money','ការណាត់ និងប្រាក់ ប.ស.ស'],
+  addVisits:['Add visits','បន្ថែមការណាត់'],
+  wentB:['I went','បានទៅ'],
+  didNotB:['Did not go','មិនបានទៅ'],
+  whatHappened:['What happened?','មានរឿងអ្វីកើតឡើង?'],
+  lockedNote:['The dates can only be changed while the visit is still in the future. This one has already arrived, so they are locked.','កាលបរិច្ឆេទអាចកែបានតែពេលការណាត់នៅមិនទាន់មកដល់។ ការណាត់នេះមកដល់ហើយ ដូច្នេះត្រូវបានចាក់សោ។'],
+  gotAmt:['received','បានទទួល'],
+  lostAmt:['not received','មិនបានទទួល'],
+  byHand:['Add by hand','វាយដោយដៃ'],
+  byHandSub:['One visit at a time, straight from the card','ម្តងមួយការណាត់ ពីប័ណ្ណដោយផ្ទាល់'],
+  byFile:['Read from a photo or PDF','អានពីរូបភាព ឬ PDF'],
+  byFileSub:['Take a picture of your ប.ស.ស card and the dates are filled in for you','ថតរូបប័ណ្ណ ប.ស.ស រួចកាលបរិច្ឆេទនឹងបំពេញដោយស្វ័យប្រវត្តិ'],
+  onDevice:['The photo is read inside your phone. It is never uploaded and never leaves the device.','រូបភាពត្រូវបានអានក្នុងទូរស័ព្ទរបស់អ្នក។ វាមិនត្រូវបានផ្ទុកឡើង និងមិនចាកចេញពីឧបករណ៍ទេ។'],
+  chooseFile:['Choose a photo or PDF','ជ្រើសរូបភាព ឬ PDF'],
+  rotateImg:['Rotate','បង្វិល'],
+  readDates:['Read the dates','អានកាលបរិច្ឆេទ'],
+  readingNow:['Reading the card…','កំពុងអានប័ណ្ណ…'],
+  foundDates:['Check every date against your card before saving. Reading a photo is never perfect.','សូមផ្ទៀងផ្ទាត់រាល់កាលបរិច្ឆេទជាមួយប័ណ្ណមុនរក្សាទុក។ ការអានរូបភាពមិនត្រឹមត្រូវ ១០០% ទេ។'],
+  noDates:['No dates could be read. Try a clearer or straighter photo, rotate it, or add by hand.','មិនអាចអានកាលបរិច្ឆេទបានទេ។ សូមថតឲ្យច្បាស់ ឬត្រង់ជាង បង្វិល ឬវាយដោយដៃ។'],
+  saveVisits:['Save these visits','រក្សាទុកការណាត់ទាំងនេះ'],
+  saveNext:['Save and add the next one','រក្សាទុក និងបន្ថែមបន្ទាប់'],
+  dedupe:['Remove duplicate rows','លុបជួរស្ទួន'],
+  dedupeDone:['duplicate rows removed','ជួរស្ទួនត្រូវបានលុប'],
+  dedupeNone:['No duplicates found','គ្មានជួរស្ទួនទេ'],
+  skipped:['already in the list, skipped','មានរួចហើយ បានរំលង'],
+  quickAdded:['visits added from your card','ការណាត់បានបន្ថែមពីប័ណ្ណ'],
+  category:['Type','ប្រភេទ'], prenatal:['Before birth','មុនសម្រាល'],
+  postnatal:['After birth','ក្រោយសម្រាល'], childV:['Child check-up','ពិនិត្យកុមារ'],
+  markDone:['I went — mark as done','ខ្ញុំបានទៅ — សម្គាល់ថារួច'],
+  markUndone:['Not done yet','មិនទាន់រួច'],
+  goToday:['GO TODAY','ទៅថ្ងៃនេះ'], openNow:['Window open','អាចទៅបាន'],
+  missedT:['MISSED','ខកខាន'], estT:['CHECK','ផ្ទៀងផ្ទាត់'], doneT:['PAID','បានទទួល'],
+  closesIn:['closes in','បិទក្នុង'], opensIn:['in','ក្នុងរយៈពេល'],
+  confirmDate:['Confirm this date matches my card','បញ្ជាក់ថាកាលបរិច្ឆេទត្រូវនឹងប័ណ្ណ'],
+  noVisits:['No NSSF visits added','មិនទាន់មានការណាត់ ប.ស.ស'],
+  noVisitsHint:['Copy the dates from your ប.ស.ស card so nobody misses a payment.','សូមចម្លងកាលបរិច្ឆេទពីប័ណ្ណ ប.ស.ស ដើម្បីកុំឲ្យខកខានប្រាក់។'],
+  nssfNext:['NSSF check-up','ពិនិត្យសុខភាព ប.ស.ស'],
+  genWarn:['These 10 dates are only an estimate from the date of birth. Open each one and correct it to match the dates printed on your ប.ស.ស card, then confirm it.','កាលបរិច្ឆេទ ១០ នេះគ្រាន់តែជាការប៉ាន់ស្មានពីថ្ងៃកំណើត។ សូមបើកម្តងមួយៗ កែឲ្យត្រូវនឹងប័ណ្ណ ប.ស.ស របស់អ្នក រួចបញ្ជាក់។'],
+  delVisit:['Remove this visit','លុបការណាត់នេះ'],
+  nssfNote:['The NSSF pays about US$20 for each check-up you attend on schedule, up to about US$280 in total. Every date here should match the ប.ស.ស card from your health centre — this app only reminds you, it does not claim the money. Bring the card and your ID to the health centre on the day.','ប.ស.ស ផ្តល់ប្រាក់ប្រហែល ២០ ដុល្លារ សម្រាប់ការពិនិត្យនីមួយៗតាមកាលវិភាគ សរុបប្រហែល ២៨០ ដុល្លារ។ កាលបរិច្ឆេទនៅទីនេះត្រូវតែដូចប័ណ្ណ ប.ស.ស។ កម្មវិធីនេះគ្រាន់តែរំលឹក មិនមែនទាមទារប្រាក់ជំនួសអ្នកទេ។ សូមយកប័ណ្ណ និងអត្តសញ្ញាណប័ណ្ណទៅមណ្ឌលសុខភាព។'],
+  privacyL:['Privacy policy','គោលការណ៍ឯកជនភាព'],
+  termsL:['Terms of service','លក្ខខណ្ឌប្រើប្រាស់'],
+  deleteAcct:['Delete my account','លុបគណនីរបស់ខ្ញុំ'],
+  deleteNote:['This removes your account. If you are the last person in your family, every record for your baby is deleted too and cannot be brought back. Copy your records first if you want to keep them.','វានឹងលុបគណនីរបស់អ្នក។ ប្រសិនបើអ្នកជាមនុស្សចុងក្រោយក្នុងគ្រួសារ កំណត់ត្រាទាំងអស់របស់ទារកនឹងត្រូវលុបជាមួយ ហើយមិនអាចយកមកវិញបានទេ។ សូមចម្លងកំណត់ត្រាទុកជាមុន។'],
+  delConfirm1:['Delete your account and all records? This cannot be undone.','លុបគណនី និងកំណត់ត្រាទាំងអស់? មិនអាចយកមកវិញបានទេ។'],
+  delConfirm2:['Last check. Have you copied the records you want to keep?','ពិនិត្យចុងក្រោយ។ តើអ្នកបានចម្លងកំណត់ត្រាដែលចង់រក្សាទុករួចហើយឬនៅ?'],
+  errCode:['That code did not match any family','លេខកូដមិនត្រឹមត្រូវ'],
+  checkEmail:['Check your email to confirm the account, then sign in.','សូមពិនិត្យអ៊ីមែលដើម្បីបញ្ជាក់គណនី បន្ទាប់មកចូល។']
+};
+let LANG = localStorage.getItem('mc.lang') || 'kh';
+const t = k => (D[k] ? D[k][LANG==='kh'?1:0] : k);
+function paintLang(){
+  document.querySelectorAll('[data-t]').forEach(e=>e.textContent=t(e.dataset.t));
+  document.getElementById('langBtn').textContent = LANG==='kh' ? 'EN' : 'ខ្មែរ';
+  document.getElementById('tagline').textContent = t('tagline');
+  document.documentElement.lang = LANG==='kh'?'km':'en';
+}
+
+/* ---------------- helpers ---------------- */
+const $ = id => document.getElementById(id);
+const now = () => Date.now();
+const HOUR=3600000, DAY=86400000;
+const ts = v => new Date(v).getTime();
+const clock = v => { const d=new Date(v); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); };
+const dstr = v => new Date(v).toLocaleDateString(LANG==='kh'?'km-KH':'en-GB',{day:'numeric',month:'short'});
+function dur(ms){ if(ms<0)ms=0; const mi=Math.floor(ms/60000),hr=Math.floor(mi/60); return hr<1?mi+t('m'):hr+t('h')+' '+(mi%60)+t('m'); }
+function durS(ms){ const mi=Math.floor(ms/60000),hr=Math.floor(mi/60),dd=Math.floor(hr/24); return dd>=1?dd+t('d'):hr>=1?hr+t('h'):mi+t('m'); }
+const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const todayStart = () => { const d=new Date(); d.setHours(0,0,0,0); return d.getTime(); };
+function toast(msg, label, fn){
+  const el=$('toast'); $('toastMsg').textContent=msg;
+  const b=$('toastAct');
+  if(label){ b.textContent=label; b.style.display=''; b.onclick=()=>{fn&&fn(); el.classList.remove('show');}; } else b.style.display='none';
+  el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),4200);
+}
+function openSheet(h){ $('sheetBody').innerHTML=h; $('scrim').classList.add('open'); $('sheet').classList.add('open'); }
+function closeSheet(){ $('scrim').classList.remove('open'); $('sheet').classList.remove('open'); }
+$('scrim').onclick=closeSheet;
+
+/* ---------------- state ---------------- */
+let ME=null, PROFILE=null, FAM=null, BABY=null;
+let EV=[], MILK=[], VAX_DONE={}, APPTS=[], GROWTH=[], NSSF=[];
+
+/* status of one NSSF visit: done | open | soon | missed */
+function nvState(v){
+  if(v.done_at) return 'done';
+  if(v.skipped) return 'missed';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const due = new Date(v.due_date+'T00:00:00');
+  const end = new Date((v.window_end||v.due_date)+'T00:00:00');
+  if(today > end) return 'missed';
+  if(today >= due) return 'open';
+  return 'soon';
+}
+const dayGap = (a,b) => Math.round((new Date(b+'T00:00:00') - new Date(a+'T00:00:00'))/DAY);
+const todayISO = () => { const d=new Date(); return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10); };
+let LIVE = JSON.parse(localStorage.getItem('mc.live')||'null');   // running timer, kept on this phone
+
+const VAX=[
+  ['bcg',0,'BCG (tuberculosis)','BCG (រោគរបេង)'],
+  ['hepb0',0,'Hepatitis B — birth dose','រលាកថ្លើម B — ដូសកំណើត'],
+  ['penta1',42,'Pentavalent 1','វ៉ាក់សាំង៥ក្នុង១ លើកទី១'],
+  ['opv1',42,'Polio drops (OPV) 1','ប៉ូលីយ៉ូ (ដក់មាត់) លើកទី១'],
+  ['pcv1',42,'PCV 1','PCV លើកទី១'],
+  ['rota1',42,'Rotavirus 1','រ៉ូតាវីរុស លើកទី១'],
+  ['penta2',70,'Pentavalent 2','វ៉ាក់សាំង៥ក្នុង១ លើកទី២'],
+  ['opv2',70,'Polio drops (OPV) 2','ប៉ូលីយ៉ូ (ដក់មាត់) លើកទី២'],
+  ['pcv2',70,'PCV 2','PCV លើកទី២'],
+  ['rota2',70,'Rotavirus 2','រ៉ូតាវីរុស លើកទី២'],
+  ['penta3',98,'Pentavalent 3','វ៉ាក់សាំង៥ក្នុង១ លើកទី៣'],
+  ['opv3',98,'Polio drops (OPV) 3','ប៉ូលីយ៉ូ (ដក់មាត់) លើកទី៣'],
+  ['pcv3',98,'PCV 3','PCV លើកទី៣'],
+  ['ipv',98,'IPV (polio injection)','IPV (ចាក់ប៉ូលីយ៉ូ)'],
+  ['mr1',274,'Measles-Rubella 1','កញ្ជ្រិល-ស្អូច លើកទី១'],
+  ['je',274,'Japanese encephalitis','រលាកខួរក្បាលជប៉ុន'],
+  ['mr2',548,'Measles-Rubella 2','កញ្ជ្រិល-ស្អូច លើកទី២']
+];
+const LIMIT={room:4*HOUR, fridge:4*DAY, freezer:180*DAY, thawed:24*HOUR};
+const RIEL_PER_VISIT = 80000;                       // US$20 at ~4,000 riel
+const money = n => '៛' + Number(n||0).toLocaleString('en-US');
+const expiry = b => ts(b.place_at) + LIMIT[b.place];
+const labelNo = b => 'MC-'+String(b.label_no||0).padStart(4,'0');
+const isNightHour = d => { const h=new Date(d).getHours(); return h>=19||h<7; };
+
+/* ============================================================
+   AUTH SCREENS
+============================================================ */
+function authView(mode){
+  const signup = mode==='signup';
+  $('authBody').innerHTML = `
+    <h2 class="big">${signup? t('welcomeNew') : t('welcome')}</h2>
+    <p class="lede">${t('authLede')}</p>
+    ${signup? `<label class="f">${t('yourName')}</label><input id="aName" placeholder="Sokha">`:''}
+    <label class="f">${t('email')}</label><input id="aEmail" type="email" inputmode="email" autocomplete="email">
+    <label class="f">${t('password')}</label><input id="aPass" type="password" autocomplete="${signup?'new-password':'current-password'}">
+    <button class="btn" id="aGo">${signup? t('signUp') : t('signIn')}</button>
+    <button class="link" id="aSwap">${signup? t('haveAcct') : t('noAcct')}</button>
+    <div id="aErr"></div>`;
+  $('aSwap').onclick = ()=>authView(signup?'signin':'signup');
+  $('aGo').onclick = async ()=>{
+    const email=$('aEmail').value.trim(), pass=$('aPass').value;
+    if(!email||!pass) return;
+    $('aGo').disabled=true;
+    try{
+      if(signup){
+        const name=$('aName').value.trim()||'Parent';
+        const {error} = await sb.auth.signUp({email,password:pass,options:{data:{display_name:name}}});
+        if(error) throw error;
+        const {error:e2} = await sb.auth.signInWithPassword({email,password:pass});
+        if(e2){ $('aErr').innerHTML=`<div class="err">${t('checkEmail')}</div>`; $('aGo').disabled=false; return; }
+      } else {
+        const {error} = await sb.auth.signInWithPassword({email,password:pass});
+        if(error) throw error;
+      }
+      await boot();
+    }catch(err){
+      $('aErr').innerHTML=`<div class="err">${esc(err.message||'Error')}</div>`;
+      $('aGo').disabled=false;
+    }
+  };
+}
+
+function setupView(){
+  $('authBody').innerHTML = `
+    <h2 class="big">${t('setupTitle')}</h2>
+    <p class="lede">${t('setupLede')}</p>
+    <button class="btn" id="sCreate">${t('createFam')}</button>
+    <button class="btn ghost" id="sJoin">${t('joinFam')}</button>
+    <button class="link" id="sOut">${t('signOut')}</button>`;
+  $('sOut').onclick = async ()=>{ await sb.auth.signOut(); location.reload(); };
+  $('sCreate').onclick = ()=>{
+    $('authBody').innerHTML = `
+      <h2 class="big">${t('createFam')}</h2>
+      <label class="f">${t('famName')}</label><input id="cFam" placeholder="Sok family">
+      <label class="f">${t('babyNameL')}</label><input id="cBaby" placeholder="Moon">
+      <label class="f">${t('dobL')}</label><input id="cDob" type="date">
+      <button class="btn" id="cGo">${t('start')}</button>
+      <button class="link" id="cBack">${t('back')}</button><div id="cErr"></div>`;
+    $('cBack').onclick=setupView;
+    $('cGo').onclick = async ()=>{
+      $('cGo').disabled=true;
+      const {error} = await sb.rpc('create_family',{
+        p_name:$('cFam').value.trim(), p_baby:$('cBaby').value.trim(), p_dob:$('cDob').value||null});
+      if(error){ $('cErr').innerHTML=`<div class="err">${esc(error.message)}</div>`; $('cGo').disabled=false; return; }
+      await boot();
+    };
+  };
+  $('sJoin').onclick = ()=>{
+    $('authBody').innerHTML = `
+      <h2 class="big">${t('joinFam')}</h2>
+      <label class="f">${t('inviteCodeL')}</label>
+      <input id="jCode" placeholder="ABCD-EFGH" autocapitalize="characters" style="text-align:center;letter-spacing:.14em;font-size:19px">
+      <button class="btn" id="jGo">${t('join')}</button>
+      <button class="link" id="jBack">${t('back')}</button><div id="jErr"></div>`;
+    $('jBack').onclick=setupView;
+    $('jGo').onclick = async ()=>{
+      $('jGo').disabled=true;
+      const {error} = await sb.rpc('join_family',{p_code:$('jCode').value.trim().toUpperCase()});
+      if(error){ $('jErr').innerHTML=`<div class="err">${t('errCode')}</div>`; $('jGo').disabled=false; return; }
+      await boot();
+    };
+  };
+}
+
+/* ============================================================
+   DATA
+============================================================ */
+async function loadAll(){
+  const [ev, mk, vx, ap, gr, ns] = await Promise.all([
+    sb.from('events').select('*').eq('baby_id',BABY.id).order('at',{ascending:false}).limit(400),
+    sb.from('milk_batches').select('*').eq('baby_id',BABY.id).is('used_at',null).order('expressed_at'),
+    sb.from('vaccinations').select('*').eq('baby_id',BABY.id),
+    sb.from('appointments').select('*').eq('baby_id',BABY.id).order('at'),
+    sb.from('growth').select('*').eq('baby_id',BABY.id).order('at',{ascending:false}),
+    sb.from('nssf_visits').select('*').eq('baby_id',BABY.id).order('due_date')
+  ]);
+  EV = ev.data||[]; MILK = mk.data||[]; APPTS = ap.data||[]; GROWTH = gr.data||[]; NSSF = ns.data||[];
+  VAX_DONE = {}; (vx.data||[]).forEach(v=>VAX_DONE[v.code]=v.given_at);
+}
+async function addEvent(row){
+  const rec = Object.assign({family_id:FAM.id, baby_id:BABY.id, by_user:ME.id, by_name:PROFILE.display_name}, row);
+  const {data,error} = await sb.from('events').insert(rec).select().single();
+  if(error){ toast(error.message); return; }
+  EV.unshift(data); paint();
+  toast(t('saved'), t('undo'), async ()=>{
+    await sb.from('events').delete().eq('id',data.id);
+    EV = EV.filter(e=>e.id!==data.id); paint();
+  });
+}
+function watch(){
+  sb.channel('fam-'+FAM.id)
+    .on('postgres_changes',{event:'*',schema:'public',table:'events',filter:'family_id=eq.'+FAM.id}, refresh)
+    .on('postgres_changes',{event:'*',schema:'public',table:'milk_batches',filter:'family_id=eq.'+FAM.id}, refresh)
+    .on('postgres_changes',{event:'*',schema:'public',table:'vaccinations',filter:'family_id=eq.'+FAM.id}, refresh)
+    .on('postgres_changes',{event:'*',schema:'public',table:'nssf_visits',filter:'family_id=eq.'+FAM.id}, refresh)
+    .subscribe();
+}
+let refreshT=null;
+function refresh(){ clearTimeout(refreshT); refreshT=setTimeout(async()=>{ await loadAll(); paint(); }, 600); }
+
+/* ============================================================
+   PAINT
+============================================================ */
+function age(){
+  if(!BABY.dob) return t('addDob');
+  const d=Math.floor((now()-ts(BABY.dob+'T00:00:00'))/DAY);
+  if(d<0) return '';
+  if(d<31) return d+' '+(LANG==='kh'?'ថ្ងៃ':'days')+' '+t('old');
+  const mo=Math.floor(d/30.44);
+  if(mo<24) return mo+' '+(LANG==='kh'?'ខែ':'months')+' '+t('old');
+  return Math.floor(mo/12)+' '+(LANG==='kh'?'ឆ្នាំ':'years')+' '+t('old');
+}
+const todayEv = () => EV.filter(e=>ts(e.at)>=todayStart());
+const lastOf = k => EV.find(e=>e.kind===k);
+
+function paint(){
+  $('babyName').textContent = BABY.name;
+  $('babySub').innerHTML = `<span class="live-dot"></span>${age()}`;
+  paintHero(); paintTaps(); paintNext(); paintLog();
+  paintMilk(); paintVax(); paintNssf(); paintAppts(); paintMed(); paintGrowth();
+  $('inviteCode').textContent = FAM.invite_code;
+  $('myEmail').textContent = ME.email;
+  $('myName').textContent = PROFILE.display_name;
+}
+function paintHero(){
+  const f=lastOf('feed'), arc=$('arc'), C=2*Math.PI*82;
+  if(!f){
+    $('sinceBig').textContent='—'; $('sinceSub').textContent=t('noFeed');
+    $('sidePill').classList.add('hide'); arc.style.strokeDashoffset=C;
+  }else{
+    const el=now()-ts(f.at);
+    $('sinceBig').textContent=durS(el);
+    $('sinceSub').textContent=clock(f.at)+' · '+(f.by_name||'');
+    const p=$('sidePill');
+    if(f.side){
+      p.classList.remove('hide');
+      p.textContent=(f.side==='L'?t('left'):f.side==='R'?t('right'):f.side==='B'?t('bottle'):t('solid'))
+        +(f.ml?' · '+f.ml+'ml':'')+(f.minutes?' · '+f.minutes+t('m'):'');
+    } else p.classList.add('hide');
+    const pc=Math.min(1, el/((BABY.feed_interval||3)*HOUR));
+    arc.style.strokeDashoffset=C*(1-pc);
+    arc.setAttribute('stroke', pc>=1?'var(--clay)':'var(--gold)');
+  }
+  const te=todayEv();
+  $('gF').textContent=te.filter(e=>e.kind==='feed').length;
+  $('gD').textContent=te.filter(e=>e.kind==='diaper').length;
+  $('gS').textContent=(te.filter(e=>e.kind==='sleep').reduce((a,e)=>a+(e.minutes||0),0)/60).toFixed(1)+'h';
+}
+function paintTaps(){
+  const bf=$('bFeed'), bs=$('bSleep');
+  [bf,bs].forEach(b=>{ b.classList.remove('on'); });
+  bf.querySelector('.s').textContent=t('tapStart');
+  bs.querySelector('.s').textContent=t('tapStart');
+  if(LIVE){
+    const b = LIVE.kind==='feed'?bf:bs;
+    b.classList.add('on');
+    b.querySelector('.s').textContent='● '+dur(now()-LIVE.start)+' · '+t('stop');
+  }
+}
+const rowHTML=(ic,c,ti,su,rt)=>`<div class="row"><div class="ic" style="color:${c}">${ic}</div>
+  <div class="bd"><b>${ti}</b><span>${su}</span></div><div class="rt">${rt}</div></div>`;
+function paintNext(){
+  let h=''; const f=lastOf('feed');
+  if(f){ const nx=ts(f.at)+(BABY.feed_interval||3)*HOUR, late=now()>nx;
+    h+=rowHTML('🍼','var(--gold)',esc(t('feed')), late?durS(now()-nx)+' '+t('overdue'):t('inT')+' '+durS(nx-now()), clock(nx)); }
+  const nv=VAX.filter(v=>!VAX_DONE[v[0]])[0];
+  if(nv&&BABY.dob){ const dd=ts(BABY.dob+'T09:00:00')+nv[1]*DAY;
+    h+=rowHTML('💉','var(--leaf)',esc(LANG==='kh'?nv[3]:nv[2]), t('nextVax'), now()>dd?t('due'):dstr(dd)); }
+  const nsv=NSSF.filter(v=>nvState(v)==='open')[0] || NSSF.filter(v=>nvState(v)==='soon')[0];
+  if(nsv){
+    const st=nvState(nsv);
+    h+=rowHTML('៛','var(--gold)', esc(t('nssfNext'))+' '+money(nsv.amount||RIEL_PER_VISIT),
+      st==='open'? t('goToday')+' · '+t('closesIn')+' '+dayGap(todayISO(), nsv.window_end||nsv.due_date)+t('d')
+                 : t('opensIn')+' '+dayGap(todayISO(), nsv.due_date)+t('d'),
+      dstr(nsv.due_date));
+  }
+  const ap=APPTS.filter(a=>ts(a.at)>now())[0];
+  if(ap) h+=rowHTML('📅','var(--dusk)',esc(ap.title), dstr(ap.at), clock(ap.at));
+  $('nextCard').innerHTML = h || `<div class="empty"><b>${t('allDone')}</b>${t('tapAbove')}</div>`;
+}
+function paintLog(){
+  const te=todayEv();
+  if(!te.length){ $('logCard').innerHTML=`<div class="empty"><b>${t('nothing')}</b>${t('tapAbove')}</div>`; return; }
+  const IC={feed:'🍼',sleep:'😴',diaper:'💧',pump:'🥛',temp:'🌡️',med:'💊'};
+  const CL={feed:'var(--gold)',sleep:'var(--dusk)',diaper:'var(--leaf)',pump:'var(--clay)',temp:'var(--clay)',med:'var(--dusk)'};
+  $('logCard').innerHTML = te.map(e=>{
+    let ti=t(e.kind)||e.kind, su='';
+    if(e.kind==='feed'){ ti=e.side==='B'?t('bottle'):e.side==='S'?t('solid'):t('breast');
+      su=[e.side==='L'?t('left'):e.side==='R'?t('right'):'', e.ml?e.ml+'ml':'', e.minutes?e.minutes+t('m'):''].filter(Boolean).join(' · '); }
+    if(e.kind==='sleep') su=t('forT')+' '+dur((e.minutes||0)*60000);
+    if(e.kind==='diaper') su=t(e.diaper||'wet');
+    if(e.kind==='pump') su=e.ml+'ml';
+    if(e.kind==='temp'){ ti=t('temp'); su=e.temp_c+'°C'; }
+    if(e.kind==='med'){ ti=e.med_name; su=(e.dose||'')+(e.every_hours?' · '+t('nextDose')+' '+clock(ts(e.at)+e.every_hours*HOUR):''); }
+    return `<div class="row"><div class="ic" style="color:${CL[e.kind]}">${IC[e.kind]||'•'}</div>
+      <div class="bd"><b>${esc(ti)}${e.by_name?`<i class="by">${esc(e.by_name)}</i>`:''}</b><span>${esc(su)}</span></div>
+      <div class="rt">${clock(e.at)}<br><button class="mini warn" data-delev="${e.id}" style="padding:1px 6px;margin-top:2px">×</button></div></div>`;
+  }).join('');
+}
+
+/* ---------- milk ---------- */
+function paintMilk(){
+  $('mTot').textContent = MILK.reduce((a,b)=>a+Number(b.ml),0);
+  $('mCnt').textContent = MILK.length;
+  const box=$('stashList');
+  if(!MILK.length){ box.innerHTML=`<div class="card"><div class="empty"><b>${t('noBags')}</b>${t('noBagsHint')}</div></div>`; return; }
+  const sorted=[...MILK].sort((a,b)=>expiry(a)-expiry(b));
+  let h=`<div class="first">↑ ${t('useFirst')}: ${labelNo(sorted[0])}</div>`;
+  h+=sorted.map(b=>{
+    const ex=expiry(b), left=ex-now(), span=LIMIT[b.place];
+    const pct=Math.max(0,Math.min(100,(left/span)*100));
+    const cls=left<=0?'bad':pct<25?'warn':'';
+    const night=b.phase==='night';
+    const held=now()-ts(b.expressed_at);
+    return `<div class="tag">
+      <div class="phase">
+        <div class="sym">${night?'☾':'☀'}</div>
+        <div class="lb">${night?t('night'):t('day')}</div>
+      </div>
+      <div class="main">
+        <div class="no">${labelNo(b)}<small>${b.ml} ml</small></div>
+        <div class="meta">${t(b.place)} · ${dstr(b.expressed_at)} ${clock(b.expressed_at)}</div>
+        <div class="life">
+          <div class="bar ${cls}"><i style="width:${pct}%"></i></div>
+          <div class="lifeTxt"><span>${durS(held)} ${t('stored')}</span>
+          <span>${left<=0?'⚠ '+t('expired'):t('useBy')+' '+dstr(ex)}</span></div>
+        </div>
+      </div>
+      <div class="acts">
+        <button class="mini" data-lbl="${b.id}">${t('label')}</button>
+        <button class="mini" data-move="${b.id}">${t('move')}</button>
+        <button class="mini warn" data-used="${b.id}">${t('used')}</button>
+      </div></div>`;
+  }).join('');
+  box.innerHTML=h;
+}
+function labelSheet(b){
+  const night=b.phase==='night', ex=expiry(b);
+  openSheet(`<h3>${labelNo(b)}</h3>
+    <div class="tag" style="margin-top:12px">
+      <div class="phase"><div class="sym" style="font-size:30px">${night?'☾':'☀'}</div>
+        <div class="lb">${night?t('nightMilk'):t('dayMilk')}</div></div>
+      <div class="main">
+        <div class="no" style="font-size:26px">${labelNo(b)}</div>
+        <div class="meta">${b.ml} ml · ${t(b.place)}</div>
+        <div class="meta">${t('expressedAt')} ${dstr(b.expressed_at)} ${clock(b.expressed_at)}</div>
+        <div class="meta"><b>${t('useBy')} ${dstr(ex)}</b></div>
+      </div></div>
+    <p class="note">${LANG==='kh'
+      ?'សរសេរលេខនេះលើថង់ ឬបោះពុម្ពស្លាក។ រូបព្រះច័ន្ទមានន័យថាបូបពេលយប់។'
+      :'Write this number on the bag, or print the label and tape it on. The moon means the milk was expressed at night.'}</p>
+    <button class="btn" id="doPrint">${t('print')}</button>`);
+  $('doPrint').onclick=()=>{
+    $('printArea').innerHTML=`<div class="plabel">
+      <div class="pn">${night?'☾':'☀'} ${labelNo(b)}</div>
+      <div class="pr">${BABY.name} · ${b.ml} ml · ${night?t('nightMilk'):t('dayMilk')}</div>
+      <div class="pr">${t('expressedAt')}: ${new Date(b.expressed_at).toLocaleString()}</div>
+      <div class="pr"><b>${t('useBy')}: ${new Date(ex).toLocaleString()}</b></div>
+      <div class="pr">Moona Care</div></div>`;
+    window.print();
+  };
+}
+function milkSheet(){
+  const nightNow = isNightHour(now());
+  openSheet(`<h3>${t('addMilk')}</h3>
+    <label class="f">${t('amount')}</label>
+    <input id="mMl" type="number" inputmode="numeric" placeholder="120">
+    <label class="f">${t('whichPhase')}</label>
+    <div class="seg" id="mPhase">
+      <button data-p="day" class="${nightNow?'':'on'}">☀ ${t('day')}</button>
+      <button data-p="night" class="${nightNow?'on':''}">☾ ${t('night')}</button></div>
+    <label class="f">${t('storeWhere')}</label>
+    <div class="seg" id="mPlace">
+      <button data-pl="fridge" class="on">${t('fridge')}</button>
+      <button data-pl="freezer">${t('freezer')}</button>
+      <button data-pl="room">${t('room')}</button></div>
+    <button class="btn" id="mSave">${t('save')}</button>`);
+  setTimeout(()=>$('mMl').focus(),250);
+}
+
+/* ---------- NSSF ---------- */
+function paintNssf(){
+  let got=0, soon=0, lost=0;
+  NSSF.forEach(v=>{
+    const a=Number(v.amount||RIEL_PER_VISIT), s=nvState(v);
+    if(s==='done') got+=a; else if(s==='missed') lost+=a; else soon+=a;
+  });
+  $('nGot').textContent=money(got);
+  $('nSoon').textContent=money(soon);
+  $('nLost').textContent=money(lost);
+
+  const box=$('nssfList');
+  if(!NSSF.length){
+    box.innerHTML=`<div class="card"><div class="empty"><b>${t('noVisits')}</b>${t('noVisitsHint')}</div></div>`;
+    return;
+  }
+  const CAT={prenatal:'prenatal',postnatal:'postnatal',child:'childV'};
+  box.innerHTML=NSSF.map(v=>{
+    const s=nvState(v), end=v.window_end||v.due_date;
+    let cls='', tag='', sub='';
+    if(s==='done'){ cls='gone'; tag=`<span class="st ok">${t('doneT')}</span>`; sub=dstr(v.done_at); }
+    else if(s==='open'){
+      cls='open';
+      const left=dayGap(todayISO(), end);
+      tag=`<span class="st now">${t('goToday')}</span>`;
+      sub=t('openNow')+' · '+t('closesIn')+' '+(left<=0?'0':left)+t('d');
+    }
+    else if(s==='missed'){ cls='miss'; tag=`<span class="st miss">${t('missedT')}</span>`; sub=t('useBy')+' '+dstr(end); }
+    else {
+      const inD=dayGap(todayISO(), v.due_date);
+      sub=t('opensIn')+' '+inD+t('d')+' · '+t('useBy')+' '+dstr(end);
+    }
+    if(v.is_estimate && s!=='done') tag+=`<span class="st est">${t('estT')}</span>`;
+
+    let strip = '';
+    // resolved rows carry no link — tap the row to change it
+    if(s==='open'){
+      // only while the visit can still be attended
+      strip = `<div class="nvact">
+        <button class="go" data-go="${v.id}">✓ ${t('wentB')}</button>
+        <button class="no" data-no="${v.id}">✗ ${t('didNotB')}</button></div>`;
+    }
+    // 'soon' (still in the future) gets no buttons at all
+
+    return `<div class="nv ${cls}">
+      <button class="nvmain" data-nv="${v.id}">
+        <div class="seq">${v.done_at?'✓':v.seq}</div>
+        <div class="mn"><b>${dstr(v.due_date)}${tag}</b>
+        <span>${t(CAT[v.category]||'childV')} · ${esc(sub)}</span></div>
+        <div class="amt">${money(v.amount||RIEL_PER_VISIT)}</div>
+      </button>${strip}</div>`;
+  }).join('');
+}
+
+const CATKEY = {prenatal:'prenatal', postnatal:'postnatal', child:'childV'};
+
+function nssfSheet(v){
+  const isNew = !v;
+  const st = isNew ? 'soon' : nvState(v);
+  const editable = isNew || st === 'soon';      // only a visit still in the future
+  const seq = isNew ? (NSSF.length? Math.max(...NSSF.map(x=>x.seq))+1 : 1) : v.seq;
+
+  if(editable){
+    const due = isNew ? todayISO() : v.due_date;
+    const end = isNew ? '' : (v.window_end||'');
+    const cat = isNew ? 'child' : v.category;
+    const amt = isNew ? RIEL_PER_VISIT : Number(v.amount||RIEL_PER_VISIT);
+    openSheet(`<h3>${t('visitNo')} ${seq}</h3>
+      <label class="f">${t('apptDate')}</label><input id="nvDue" type="date" value="${due}">
+      <label class="f">${t('windowEnd')}</label><input id="nvEnd" type="date" value="${end}">
+      <label class="f">${t('category')}</label>
+      <div class="seg" id="nvCat">
+        <button data-c="prenatal" class="${cat==='prenatal'?'on':''}">${t('prenatal')}</button>
+        <button data-c="postnatal" class="${cat==='postnatal'?'on':''}">${t('postnatal')}</button>
+        <button data-c="child" class="${cat==='child'?'on':''}">${t('childV')}</button></div>
+      <label class="f">${t('amountKhr')}</label><input id="nvAmt" type="number" step="1000" value="${amt}">
+      <button class="btn" id="nvSave" data-id="${isNew?'':v.id}">${t('save')}</button>
+      ${isNew?`<button class="btn ghost" id="nvNext">${t('saveNext')}</button>`:''}
+      ${isNew?'':`<button class="link" id="nvDel">${t('delVisit')}</button>`}`);
+    return;
+  }
+
+  // already started or finished — dates are locked
+  const action = `<label class="f">${t('whatHappened')}</label>
+    <div class="seg">
+      <button class="${st==='done'?'on':''}" data-go="${v.id}">✓ ${t('wentB')}</button>
+      <button class="${st==='missed'?'on':''}" data-no="${v.id}">✗ ${t('missedT')}</button>
+    </div>`;
+  openSheet(`<h3>${t('visitNo')} ${seq}</h3>
+    <div class="card" style="margin-top:12px">
+      <div class="row"><div class="ic">📅</div><div class="bd">
+        <b>${dstr(v.due_date)}</b><span>${t('apptDate')}</span></div></div>
+      <div class="row"><div class="ic">⏳</div><div class="bd">
+        <b>${dstr(v.window_end||v.due_date)}</b><span>${t('windowEnd')}</span></div></div>
+      <div class="row"><div class="ic">🏥</div><div class="bd">
+        <b>${t(CATKEY[v.category]||'childV')}</b><span>${t('category')}</span></div></div>
+      <div class="row"><div class="ic">៛</div><div class="bd">
+        <b>${money(v.amount||RIEL_PER_VISIT)}</b><span>${t('amountKhr')}</span></div></div>
+      ${v.done_at?`<div class="row"><div class="ic">✓</div><div class="bd">
+        <b>${dstr(v.done_at)}</b><span>${t('gotAmt')}</span></div></div>`:''}
+    </div>
+    <p class="note">🔒 ${t('lockedNote')}</p>
+    ${action}
+    <button class="link" id="nvDel">${t('delVisit')}</button>`);
+}
+
+async function saveNssf(id){
+  const due=$('nvDue').value; if(!due) return;
+  let end=$('nvEnd').value;
+  if(!end){ const d=new Date(due+'T00:00:00'); d.setDate(d.getDate()+7); end=d.toISOString().slice(0,10); }
+  const patch={ due_date:due, window_end:end, category:document.querySelector('#nvCat .on').dataset.c,
+                amount:+$('nvAmt').value||RIEL_PER_VISIT, is_estimate:false };
+  closeSheet();
+  if(id){
+    await sb.from('nssf_visits').update(patch).eq('id',id);
+    const v=NSSF.find(x=>x.id===id); Object.assign(v,patch);
+  }else{
+    const seq = NSSF.length? Math.max(...NSSF.map(x=>x.seq))+1 : 1;
+    const {data,error}=await sb.from('nssf_visits')
+      .insert(Object.assign({family_id:FAM.id,baby_id:BABY.id,seq},patch)).select().single();
+    if(error){ toast(error.message); return; }
+    NSSF.push(data);
+  }
+  NSSF.sort((a,b)=>a.due_date.localeCompare(b.due_date));
+  paintNssf(); paintNext(); toast(t('saved'));
+}
+
+/* read the dates a parent types straight off their ប.ស.ស card */
+function parseCardText(txt){
+  const rx = /(\d{1,2})[\/\-. ](\d{1,2})[\/\-. ](\d{4})/g;
+  const iso = m => m[3]+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[1]).padStart(2,'0');
+  const out = [];
+  txt.split(/\n/).forEach(line=>{
+    const found=[...line.matchAll(rx)];
+    if(!found.length) return;
+    const due = iso(found[0]);
+    let end;
+    if(found[1]) end = iso(found[1]);
+    else { const d=new Date(due+'T00:00:00'); d.setDate(d.getDate()+7); end=d.toISOString().slice(0,10); }
+    out.push({due,end});
+  });
+  return out.sort((a,b)=>a.due.localeCompare(b.due));
+}
+
+function nssfChooser(){
+  openSheet(`<h3>${t('addVisits')}</h3>
+    <button class="btn ghost" id="chHand" style="text-align:left;margin-top:14px">
+      <b style="display:block;font-size:15px">✎ ${t('byHand')}</b>
+      <span style="font-size:11.5px;color:var(--mute);font-weight:400">${t('byHandSub')}</span></button>
+    <button class="btn ghost" id="chFile" style="text-align:left">
+      <b style="display:block;font-size:15px">📷 ${t('byFile')}</b>
+      <span style="font-size:11.5px;color:var(--mute);font-weight:400">${t('byFileSub')}</span></button>
+    <button class="link" id="chDedupe">${t('dedupe')}</button>`);
+  $('chHand').onclick  = ()=>nssfSheet(null);
+  $('chFile').onclick  = importSheet;
+  $('chDedupe').onclick = dedupeNssf;
+}
+
+/* keep one row per appointment date, preferring one already marked done */
+async function dedupeNssf(){
+  const seen={}, kill=[];
+  [...NSSF].sort((a,b)=> (b.done_at?1:0)-(a.done_at?1:0)).forEach(v=>{
+    if(seen[v.due_date]) kill.push(v.id); else seen[v.due_date]=true;
+  });
+  closeSheet();
+  if(!kill.length){ toast(t('dedupeNone')); return; }
+  await sb.from('nssf_visits').delete().in('id',kill);
+  NSSF=NSSF.filter(v=>!kill.includes(v.id));
+  renumber(); paintNssf(); paintNext();
+  toast(kill.length+' '+t('dedupeDone'));
+}
+async function renumber(){
+  NSSF.sort((a,b)=>a.due_date.localeCompare(b.due_date));
+  for(let i=0;i<NSSF.length;i++){
+    if(NSSF[i].seq!==i+1){ NSSF[i].seq=i+1; await sb.from('nssf_visits').update({seq:i+1}).eq('id',NSSF[i].id); }
+  }
+}
+
+/* ============================================================
+   Reading the card from a photo or PDF.
+   Everything below runs inside the browser — the file is never
+   sent to us or to anyone else.
+============================================================ */
+let IMP = { canvas:null, rot:0, src:null, rows:[] };
+
+function loadScript(src){
+  return new Promise((ok,bad)=>{
+    if(document.querySelector(`script[src="${src}"]`)) return ok();
+    const el=document.createElement('script'); el.src=src; el.onload=ok; el.onerror=bad;
+    document.head.appendChild(el);
+  });
+}
+
+function importSheet(){
+  IMP={canvas:null,rot:0,src:null,rows:[]};
+  openSheet(`<h3>${t('byFile')}</h3>
+    <p class="note" style="font-size:12.5px">🔒 ${t('onDevice')}</p>
+    <label class="f">${t('chooseFile')}</label>
+    <input type="file" id="impFile" accept="image/*,application/pdf">
+    <div id="impStage" style="margin-top:14px"></div>`);
+  $('impFile').onchange = onPickFile;
+}
+
+async function onPickFile(e){
+  const f=e.target.files && e.target.files[0]; if(!f) return;
+  $('impStage').innerHTML=`<p class="note">${t('readingNow')}</p>`;
+  try{
+    if(f.type==='application/pdf'){
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      const buf=await f.arrayBuffer();
+      const pdf=await window.pdfjsLib.getDocument({data:buf}).promise;
+      const page=await pdf.getPage(1);
+      const vp=page.getViewport({scale:2});
+      const c=document.createElement('canvas'); c.width=vp.width; c.height=vp.height;
+      await page.render({canvasContext:c.getContext('2d'), viewport:vp}).promise;
+      IMP.src=c;
+    } else {
+      IMP.src = await new Promise((ok,bad)=>{
+        const img=new Image(); const url=URL.createObjectURL(f);
+        img.onload=()=>{ URL.revokeObjectURL(url); ok(img); }; img.onerror=bad; img.src=url;
+      });
+    }
+    IMP.rot=0; drawStage();
+  }catch(err){ $('impStage').innerHTML=`<div class="err">${esc(err.message||'Could not open that file')}</div>`; }
+}
+
+function drawStage(){
+  const src=IMP.src, sw=src.width||src.naturalWidth, sh=src.height||src.naturalHeight;
+  const max=1500, scale=Math.min(1, max/Math.max(sw,sh));
+  const w=Math.round(sw*scale), h=Math.round(sh*scale);
+  const c=document.createElement('canvas');
+  const turned = IMP.rot===90||IMP.rot===270;
+  c.width = turned? h : w; c.height = turned? w : h;
+  const x=c.getContext('2d');
+  x.translate(c.width/2, c.height/2); x.rotate(IMP.rot*Math.PI/180);
+  x.drawImage(src, -w/2, -h/2, w, h);
+  IMP.canvas=c;
+  $('impStage').innerHTML=`
+    <div style="border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff">
+      <img id="impPrev" style="width:100%;display:block" src="${c.toDataURL('image/jpeg',0.85)}">
+    </div>
+    <button class="btn ghost" id="impRot">↻ ${t('rotateImg')}</button>
+    <button class="btn" id="impRead">${t('readDates')}</button>`;
+  $('impRot').onclick=()=>{ IMP.rot=(IMP.rot+90)%360; drawStage(); };
+  $('impRead').onclick=runOcr;
+}
+
+async function runOcr(){
+  $('impStage').innerHTML=`<p class="note">${t('readingNow')}</p><div class="bar"><i id="ocrBar" style="width:5%"></i></div>`;
+  try{
+    await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js');
+    const worker = await window.Tesseract.createWorker('eng', 1, {
+      logger: m => { if(m.progress) { const b=$('ocrBar'); if(b) b.style.width=Math.round(m.progress*100)+'%'; } }
+    });
+    await worker.setParameters({ tessedit_char_whitelist:'0123456789/-. ' });
+    const { data } = await worker.recognize(IMP.canvas);
+    await worker.terminate();
+    IMP.rows = parseCardText(data.text || '').slice(0,20);
+    showFound();
+  }catch(err){
+    $('impStage').innerHTML=`<div class="err">${esc(err.message||'Could not read the image')}</div>
+      <button class="btn ghost" id="impBack">${t('back')}</button>`;
+    $('impBack').onclick=importSheet;
+  }
+}
+
+function showFound(){
+  if(!IMP.rows.length){
+    $('impStage').innerHTML=`<div class="err">${t('noDates')}</div>
+      <button class="btn ghost" id="impBack">${t('back')}</button>`;
+    $('impBack').onclick=importSheet; return;
+  }
+  $('impStage').innerHTML=`<p class="note" style="font-size:12.5px">⚠ ${t('foundDates')}</p>
+    <div id="impRows"></div>
+    <button class="btn" id="impSave">${t('saveVisits')}</button>`;
+  paintFound();
+  $('impSave').onclick=saveFound;
+}
+function paintFound(){
+  $('impRows').innerHTML = IMP.rows.map((r,i)=>`
+    <div class="row"><div class="ic">${i+1}</div>
+      <div class="bd"><b>${dstr(r.due)}</b><span>${t('useBy')} ${dstr(r.end)}</span></div>
+      <button class="mini warn" data-impdel="${i}">×</button></div>`).join('');
+}
+
+async function saveFound(){
+  closeSheet();
+  const have = new Set(NSSF.map(v=>v.due_date));
+  const fresh = IMP.rows.filter(r=>!have.has(r.due));
+  const skipped = IMP.rows.length - fresh.length;
+  if(!fresh.length){ toast(skipped+' '+t('skipped')); return; }
+
+  const base = NSSF.length;
+  const payload = fresh.map((r,i)=>({
+    family_id:FAM.id, baby_id:BABY.id, seq:base+i+1,
+    category: (base+i) < 2 ? 'postnatal' : 'child',
+    due_date:r.due, window_end:r.end,
+    amount:RIEL_PER_VISIT, is_estimate:false
+  }));
+  const {data,error}=await sb.from('nssf_visits').insert(payload).select();
+  if(error){ toast(error.message); return; }
+  NSSF=NSSF.concat(data);
+  await renumber(); paintNssf(); paintNext();
+  toast(data.length+' '+t('quickAdded') + (skipped? ' · '+skipped+' '+t('skipped') : ''));
+}
+
+async function setVisit(id, patch){
+  const v=NSSF.find(x=>x.id===id); if(!v) return;
+  closeSheet();
+  Object.assign(v, patch);
+  paintNssf(); paintNext();
+  const {error}=await sb.from('nssf_visits').update(patch).eq('id',id);
+  if(error){ toast(error.message); return; }
+  if(patch.done_at) toast('✓ '+money(v.amount||RIEL_PER_VISIT)+' '+t('gotAmt'));
+}
+
+/* ---------- vaccines / appts / health ---------- */
+function paintVax(){
+  if(!BABY.dob){ $('vaxCard').innerHTML=`<div class="empty"><b>${t('addDob')}</b></div>`; return; }
+  const base=ts(BABY.dob+'T09:00:00');
+  $('vaxCard').innerHTML=VAX.map(([c,d,en,kh])=>{
+    const g=VAX_DONE[c], due=base+d*DAY;
+    const late=!g&&now()>due+DAY, soon=!g&&!late&&due-now()<14*DAY;
+    const tag=late?`<span class="tg due">${t('due')}</span>`:soon?`<span class="tg soon">${t('soon')}</span>`:'';
+    return `<div class="vx ${g?'done':''}"><button class="tick ${g?'on':''}" data-vax="${c}">✓</button>
+      <div class="in"><b>${LANG==='kh'?kh:en}${tag}</b>
+      <span>${g?'✓ '+dstr(g):dstr(due)}</span></div></div>`;
+  }).join('');
+}
+function paintAppts(){
+  if(!APPTS.length){ $('apptCard').innerHTML=`<div class="empty"><b>${t('nothing')}</b></div>`; return; }
+  $('apptCard').innerHTML=APPTS.map(a=>`<div class="row"><div class="ic" style="color:var(--dusk)">📅</div>
+    <div class="bd"><b>${esc(a.title)}</b><span>${dstr(a.at)} ${clock(a.at)}</span></div>
+    <button class="mini warn" data-delap="${a.id}">×</button></div>`).join('');
+}
+function paintMed(){
+  const l=EV.filter(e=>e.kind==='med'||e.kind==='temp').slice(0,12);
+  if(!l.length){ $('medCard').innerHTML=`<div class="empty"><b>${t('noMed')}</b></div>`; return; }
+  $('medCard').innerHTML=l.map(e=>{
+    const isM=e.kind==='med', ok=isM&&e.every_hours?ts(e.at)+e.every_hours*HOUR:null;
+    return `<div class="row"><div class="ic" style="color:${isM?'var(--dusk)':'var(--clay)'}">${isM?'💊':'🌡️'}</div>
+      <div class="bd"><b>${isM?esc(e.med_name):e.temp_c+'°C'}${e.by_name?`<i class="by">${esc(e.by_name)}</i>`:''}</b>
+      <span>${isM?esc(e.dose||'')+(ok?' · '+t('nextDose')+' '+clock(ok)+(now()<ok?' ⏳':' ✓'):''):dstr(e.at)}</span></div>
+      <div class="rt">${clock(e.at)}</div></div>`;
+  }).join('');
+}
+function paintGrowth(){
+  if(!GROWTH.length){ $('growthCard').innerHTML=`<div class="empty"><b>${t('noGrowth')}</b></div>`; return; }
+  $('growthCard').innerHTML=GROWTH.map((g,i)=>{
+    const p=GROWTH[i+1], dk=p&&g.kg&&p.kg?((g.kg-p.kg>=0?'+':'')+(g.kg-p.kg).toFixed(2)+'kg'):'';
+    return `<div class="row"><div class="ic" style="color:var(--leaf)">📏</div>
+      <div class="bd"><b>${g.kg?g.kg+' kg':''}${g.cm?' · '+g.cm+' cm':''}${g.head_cm?' · '+g.head_cm+' cm':''}</b>
+      <span>${dstr(g.at)} ${dk?'· '+dk:''}</span></div>
+      <button class="mini warn" data-delgr="${g.id}">×</button></div>`;
+  }).join('');
+}
+
+/* ============================================================
+   INTERACTIONS
+============================================================ */
+function setLive(v){ LIVE=v; try{ v?localStorage.setItem('mc.live',JSON.stringify(v)):localStorage.removeItem('mc.live'); }catch(e){} paintTaps(); }
+$('bFeed').onclick=()=>{
+  if(LIVE&&LIVE.kind==='feed'){ const mins=Math.round((now()-LIVE.start)/60000), side=LIVE.side; setLive(null);
+    addEvent({kind:'feed',side,minutes:mins}); return; }
+  if(LIVE) return;
+  openSheet(`<h3>${t('feed')}</h3>
+    <div class="seg" style="margin-top:14px"><button data-fs="L">${t('left')}</button><button data-fs="R">${t('right')}</button></div>
+    <div class="seg" style="margin-top:8px"><button data-fq="B">${t('bottle')}</button><button data-fq="S">${t('solid')}</button></div>`);
+};
+$('bSleep').onclick=()=>{
+  if(LIVE&&LIVE.kind==='sleep'){ const mins=Math.round((now()-LIVE.start)/60000); setLive(null); addEvent({kind:'sleep',minutes:mins}); return; }
+  if(LIVE) return;
+  setLive({kind:'sleep',start:now()}); toast(t('running'));
+};
+$('bDiaper').onclick=()=>openSheet(`<h3>${t('diaper')}</h3>
+  <div class="seg" style="margin-top:14px"><button data-dp="wet">${t('wet')}</button>
+  <button data-dp="dirty">${t('dirty')}</button><button data-dp="both">${t('both')}</button></div>`);
+$('bPump').onclick=milkSheet;
+$('addNssf').onclick=nssfChooser;
+$('addMilkBtn').onclick=milkSheet;
+$('bTemp').onclick=()=>{ openSheet(`<h3>${t('temp')}</h3><label class="f">°C</label>
+  <input id="tC" type="number" step="0.1" inputmode="decimal" placeholder="37.0">
+  <button class="btn" id="tSave">${t('save')}</button>`); setTimeout(()=>$('tC').focus(),250); };
+$('bMed').onclick=()=>openSheet(`<h3>${t('medicine')}</h3>
+  <label class="f">${t('title')}</label><input id="mdName" placeholder="Paracetamol">
+  <label class="f">${t('dose')}</label><input id="mdDose" placeholder="2.5 ml">
+  <label class="f">${t('every')}</label><input id="mdEvery" type="number" placeholder="6">
+  <button class="btn" id="mdSave">${t('save')}</button>`);
+$('addGrowthBtn').onclick=()=>openSheet(`<h3>${t('growth')}</h3>
+  <label class="f">${t('weight')}</label><input id="grKg" type="number" step="0.01" inputmode="decimal">
+  <label class="f">${t('height')}</label><input id="grCm" type="number" step="0.1" inputmode="decimal">
+  <label class="f">${t('headC')}</label><input id="grHd" type="number" step="0.1" inputmode="decimal">
+  <button class="btn" id="grSave">${t('save')}</button>`);
+$('addApptBtn').onclick=()=>{
+  const d=new Date(now()+DAY);
+  openSheet(`<h3>${t('appts')}</h3>
+    <label class="f">${t('title')}</label><input id="apT" placeholder="Health centre visit">
+    <label class="f">${t('date')}</label><input id="apD" type="date" value="${d.toISOString().slice(0,10)}">
+    <label class="f">${t('time')}</label><input id="apH" type="time" value="09:00">
+    <button class="btn" id="apSave">${t('save')}</button>`);
+};
+
+document.body.addEventListener('click', async e=>{
+  const el=e.target.closest('[data-fs],[data-fq],[data-dp],[data-p],[data-pl],[data-c],[data-vax],[data-used],[data-move],[data-lbl],[data-delev],[data-delap],[data-delgr],[data-nv],[data-impdel],[data-go],[data-no],[data-undo],[data-pref]');
+  if(!el) return;
+  if(el.dataset.fs){ setLive({kind:'feed',start:now(),side:el.dataset.fs}); closeSheet(); toast(t('running')); return; }
+  if(el.dataset.fq){
+    if(el.dataset.fq==='B'){ openSheet(`<h3>${t('bottle')}</h3><label class="f">${t('amount')}</label>
+      <input id="bMl" type="number" inputmode="numeric" placeholder="120"><button class="btn" id="bSave">${t('save')}</button>`);
+      setTimeout(()=>$('bMl').focus(),250);
+    } else { closeSheet(); addEvent({kind:'feed',side:'S'}); }
+    return;
+  }
+  if(el.dataset.dp){ closeSheet(); addEvent({kind:'diaper',diaper:el.dataset.dp}); return; }
+  if(el.dataset.p||el.dataset.pl||el.dataset.c){ el.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('on')); el.classList.add('on'); return; }
+  if(el.dataset.nv){ const v=NSSF.find(x=>x.id===el.dataset.nv); if(v) nssfSheet(v); return; }
+  if(el.dataset.impdel!==undefined){ IMP.rows.splice(+el.dataset.impdel,1); paintFound(); return; }
+  if(el.dataset.pref){ await setPref(el.dataset.pref); return; }
+  if(el.dataset.go){ await setVisit(el.dataset.go, {done_at:todayISO(), skipped:false}); return; }
+  if(el.dataset.no){ await setVisit(el.dataset.no, {done_at:null, skipped:true}); return; }
+  if(el.dataset.undo){ await setVisit(el.dataset.undo, {done_at:null, skipped:false}); return; }
+  if(el.dataset.vax){
+    const c=el.dataset.vax;
+    if(VAX_DONE[c]){ await sb.from('vaccinations').delete().eq('baby_id',BABY.id).eq('code',c); delete VAX_DONE[c]; }
+    else { await sb.from('vaccinations').insert({family_id:FAM.id,baby_id:BABY.id,code:c}); VAX_DONE[c]=new Date().toISOString().slice(0,10); }
+    paintVax(); paintNext(); return;
+  }
+  if(el.dataset.used){ await sb.from('milk_batches').update({used_at:new Date().toISOString()}).eq('id',el.dataset.used);
+    MILK=MILK.filter(b=>b.id!==el.dataset.used); paintMilk(); return; }
+  if(el.dataset.move){
+    const b=MILK.find(x=>x.id===el.dataset.move); if(!b) return;
+    const o=['freezer','fridge','thawed','room']; b.place=o[(o.indexOf(b.place)+1)%o.length]; b.place_at=new Date().toISOString();
+    await sb.from('milk_batches').update({place:b.place,place_at:b.place_at}).eq('id',b.id); paintMilk(); return;
+  }
+  if(el.dataset.lbl){ const b=MILK.find(x=>x.id===el.dataset.lbl); if(b) labelSheet(b); return; }
+  if(el.dataset.delev){ await sb.from('events').delete().eq('id',el.dataset.delev); EV=EV.filter(x=>x.id!==el.dataset.delev); paint(); return; }
+  if(el.dataset.delap){ await sb.from('appointments').delete().eq('id',el.dataset.delap); APPTS=APPTS.filter(x=>x.id!==el.dataset.delap); paintAppts(); return; }
+  if(el.dataset.delgr){ await sb.from('growth').delete().eq('id',el.dataset.delgr); GROWTH=GROWTH.filter(x=>x.id!==el.dataset.delgr); paintGrowth(); return; }
+});
+
+document.body.addEventListener('click', async e=>{
+  const id=e.target.id;
+  if(id==='bSave'){ const ml=+$('bMl').value||0; closeSheet(); addEvent({kind:'feed',side:'B',ml}); }
+  if(id==='mSave'){
+    const ml=+$('mMl').value||0; if(!ml) return;
+    const phase=document.querySelector('#mPhase .on').dataset.p;
+    const place=document.querySelector('#mPlace .on').dataset.pl;
+    closeSheet();
+    const {data,error}=await sb.from('milk_batches').insert({family_id:FAM.id,baby_id:BABY.id,ml,phase,place,by_name:PROFILE.display_name}).select().single();
+    if(error){ toast(error.message); return; }
+    MILK.push(data); await addEvent({kind:'pump',ml});
+    paintMilk(); labelSheet(data);
+  }
+  if(id==='nvSave'){ await saveNssf(e.target.dataset.id||null); }
+  if(id==='nvNext'){ await saveNssf(null); nssfSheet(null); }
+  if(id==='genOk'){ closeSheet(); }
+  if(id==='nvDel'){
+    const btn=document.querySelector('#nvSave');
+    const act=document.querySelector('#sheetBody [data-go],#sheetBody [data-no],#sheetBody [data-undo]');
+    const vid=(btn&&btn.dataset.id) || (act && (act.dataset.go||act.dataset.no||act.dataset.undo));
+    if(!vid) return;
+    closeSheet();
+    await sb.from('nssf_visits').delete().eq('id',vid);
+    NSSF=NSSF.filter(x=>x.id!==vid); await renumber(); paintNssf(); paintNext();
+  }
+  if(id==='tSave'){ const c=+$('tC').value||0; if(!c) return; closeSheet(); addEvent({kind:'temp',temp_c:c}); }
+  if(id==='mdSave'){ const n=$('mdName').value.trim(); if(!n) return; closeSheet();
+    addEvent({kind:'med',med_name:n,dose:$('mdDose').value.trim(),every_hours:+$('mdEvery').value||null}); }
+  if(id==='grSave'){
+    closeSheet();
+    const {data}=await sb.from('growth').insert({family_id:FAM.id,baby_id:BABY.id,
+      kg:+$('grKg').value||null,cm:+$('grCm').value||null,head_cm:+$('grHd').value||null}).select().single();
+    if(data){ GROWTH.unshift(data); paintGrowth(); toast(t('saved')); }
+  }
+  if(id==='apSave'){
+    const ti=$('apT').value.trim(); if(!ti) return;
+    const at=new Date($('apD').value+'T'+$('apH').value).toISOString();
+    closeSheet();
+    const {data}=await sb.from('appointments').insert({family_id:FAM.id,baby_id:BABY.id,title:ti,at}).select().single();
+    if(data){ APPTS.push(data); APPTS.sort((a,b)=>ts(a.at)-ts(b.at)); paintAppts(); paintNext(); toast(t('saved')); }
+  }
+});
+
+$('saveBaby').onclick=async ()=>{
+  const patch={name:$('sName').value.trim()||'Baby', dob:$('sDob').value||null, feed_interval:+$('sGap').value||3};
+  const {error}=await sb.from('babies').update(patch).eq('id',BABY.id);
+  if(error){ toast(error.message); return; }
+  Object.assign(BABY,patch); paint(); toast(t('saved'));
+};
+$('signOut').onclick=async ()=>{ await sb.auth.signOut(); location.reload(); };
+$('delAcct').onclick=async ()=>{
+  if(!confirm(t('delConfirm1'))) return;
+  if(!confirm(t('delConfirm2'))) return;
+  const {error}=await sb.rpc('delete_my_account');
+  if(error){ toast(error.message); return; }
+  await sb.auth.signOut();
+  location.reload();
+};
+async function copyOut(txt){
+  try{ await navigator.clipboard.writeText(txt); toast(t('copied')); }
+  catch(e){ openSheet(`<textarea rows="14" style="font-size:12px">${esc(txt)}</textarea>`); }
+}
+$('copyCode').onclick=()=>copyOut(FAM.invite_code);
+$('copyBtn').onclick=()=>{
+  const te=todayEv().slice().reverse();
+  let s=`${BABY.name} — ${new Date().toLocaleDateString()}\n${age()}\n──────────\n`;
+  te.forEach(e=>{
+    let l=clock(e.at)+'  ';
+    if(e.kind==='feed') l+='🍼 '+(e.side==='B'?'Bottle '+(e.ml||'')+'ml':e.side==='S'?'Solid':'Breast '+e.side+' '+(e.minutes||0)+'min');
+    if(e.kind==='sleep') l+='😴 '+dur((e.minutes||0)*60000);
+    if(e.kind==='diaper') l+='💧 '+e.diaper;
+    if(e.kind==='pump') l+='🥛 '+e.ml+'ml';
+    if(e.kind==='temp') l+='🌡️ '+e.temp_c+'°C';
+    if(e.kind==='med') l+='💊 '+e.med_name+' '+(e.dose||'');
+    s+=l+(e.by_name?'  ('+e.by_name+')':'')+'\n';
+  });
+  copyOut(s+'──────────\nMoona Care');
+};
+$('exportBtn').onclick=()=>copyOut(JSON.stringify({events:EV,milk:MILK,vaccines:VAX_DONE,growth:GROWTH},null,1));
+
+/* ============================================================
+   Telegram reminders
+============================================================ */
+let TG = null, PREFS = null;
+
+async function loadTg(){
+  const [{data:link}, {data:pref}] = await Promise.all([
+    sb.from('telegram_links').select('*').maybeSingle(),
+    sb.from('notify_prefs').select('*').maybeSingle()
+  ]);
+  TG = link || null;
+  PREFS = pref || {milk:true, vaccine:true, nssf:true, lang:LANG};
+  paintTg();
+}
+
+function paintTg(){
+  const box=$('tgCard'); if(!box) return;
+  if(!TG){
+    box.innerHTML = `<p class="note" style="font-size:12.5px;margin-top:0">${t('tgWhy')}</p>
+      <button class="btn" id="tgGo">✈ ${t('tgConnect')}</button>
+      <p class="note">🔒 ${t('tgPrivate')}</p>`;
+    $('tgGo').onclick = connectTg;
+    return;
+  }
+  const row = (key,labelKey) => `<div class="row">
+      <div class="ic">${key==='milk'?'🍼':key==='vaccine'?'💉':'៛'}</div>
+      <div class="bd"><b>${t(labelKey)}</b></div>
+      <button class="mini" data-pref="${key}">${PREFS[key]?'✓':'—'}</button></div>`;
+  box.innerHTML = `<div class="row" style="padding-top:0">
+      <div class="ic" style="color:var(--leaf)">✈</div>
+      <div class="bd"><b>${t('tgOn')}</b><span>${TG.username?'@'+esc(TG.username):''}</span></div>
+      <button class="mini warn" id="tgOut">${t('tgOff')}</button></div>
+    ${row('milk','tgMilk')}${row('vaccine','tgVax')}${row('nssf','tgNssf')}
+    <p class="note">🔒 ${t('tgPrivate')}</p>`;
+  $('tgOut').onclick = async ()=>{
+    await sb.from('telegram_links').delete().eq('user_id', ME.id);
+    TG=null; paintTg(); toast(t('saved'));
+  };
+}
+
+async function connectTg(){
+  toast(t('tgOpening'));
+  const {data:token, error} = await sb.rpc('create_telegram_token');
+  if(error){ toast(error.message); return; }
+  // telegram.me works on Cambodian networks where t.me is sometimes blocked
+  const url = `https://telegram.me/${TELEGRAM_BOT}?start=${token}`;
+  window.open(url, '_blank');
+  openSheet(`<h3>✈ ${t('tgConnect')}</h3>
+    <p class="note" style="font-size:12.5px">${t('tgPrivate')}</p>
+    <a class="btn" style="display:block;text-align:center;text-decoration:none"
+       href="${url}" target="_blank" rel="noopener">${t('tgManual')}</a>`);
+  const again = async ()=>{ await loadTg(); if(TG){ closeSheet(); toast(t('tgOn')); } };
+  setTimeout(again, 6000); setTimeout(again, 15000); setTimeout(again, 30000);
+}
+
+async function setPref(key){
+  PREFS[key] = !PREFS[key];
+  paintTg();
+  await sb.from('notify_prefs').upsert({
+    user_id:ME.id, milk:PREFS.milk, vaccine:PREFS.vaccine, nssf:PREFS.nssf, lang:LANG
+  });
+}
+
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  ['today','milk','vax','nssf','health','set'].forEach(k=>$('t-'+k).classList.toggle('hide',k!==b.dataset.tab));
+  window.scrollTo(0,0);
+});
+$('langBtn').onclick=()=>{ LANG=LANG==='kh'?'en':'kh'; localStorage.setItem('mc.lang',LANG); paintLang(); paint(); };
+$('nightBtn').onclick=()=>{
+  const cur=localStorage.getItem('mc.night')||'auto';
+  const nx=cur==='auto'?'on':cur==='on'?'off':'auto';
+  localStorage.setItem('mc.night',nx); applyNight();
+};
+function applyNight(){
+  const mode=localStorage.getItem('mc.night')||'auto';
+  const h=new Date().getHours();
+  const on = mode==='on' || (mode==='auto' && (h>=19||h<6));
+  document.body.classList.toggle('night',on);
+  $('nightBtn').textContent = mode==='auto'?'☾':mode==='on'?'●':'☀';
+}
+
+/* ============================================================
+   BOOT
+============================================================ */
+async function boot(){
+  paintLang(); applyNight();
+  const {data:{session}} = await sb.auth.getSession();
+  if(!session){ $('auth').classList.remove('hide'); $('app').classList.add('hide'); $('nav').classList.add('hide'); authView('signin'); return; }
+  ME = session.user;
+
+  let {data:prof} = await sb.from('profiles').select('*').eq('id',ME.id).maybeSingle();
+  if(!prof){ const r=await sb.from('profiles').insert({id:ME.id,display_name:ME.email.split('@')[0]}).select().single(); prof=r.data; }
+  PROFILE = prof;
+
+  const {data:mem} = await sb.from('family_members').select('family_id, families(*)').limit(1);
+  if(!mem || !mem.length){ $('auth').classList.remove('hide'); setupView(); return; }
+  FAM = mem[0].families;
+
+  let {data:babies} = await sb.from('babies').select('*').eq('family_id',FAM.id).order('created_at').limit(1);
+  if(!babies || !babies.length){
+    const r = await sb.from('babies').insert({family_id:FAM.id,name:'Baby'}).select().single();
+    babies=[r.data];
+  }
+  BABY = babies[0];
+
+  $('sName').value=BABY.name; $('sDob').value=BABY.dob||''; $('sGap').value=BABY.feed_interval||3;
+  $('auth').classList.add('hide'); $('app').classList.remove('hide'); $('nav').classList.remove('hide');
+  await loadAll(); paint(); watch(); loadTg();
+}
+boot();
+setInterval(()=>{ if(BABY){ paintHero(); paintTaps(); paintNext(); paintMilk(); paintNssf(); } applyNight(); }, 20000);
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden && BABY){ refresh(); loadTg(); } });
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
