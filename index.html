@@ -541,7 +541,16 @@ const clock = v => {
   h = h%12 || 12;                      // 0 → 12 AM, 13 → 1 PM
   return h+':'+m+' '+ap;
 };
-const dstr = v => new Date(v).toLocaleDateString(LANG==='kh'?'km-KH':'en-GB',{day:'numeric',month:'short'});
+const LOC = () => (LANG==='kh' ? 'km-KH' : 'en-GB');
+// short for this year, with the year once it moves out of it
+const dstr = v => {
+  const d=new Date(v);
+  const opt = {day:'numeric', month:'short'};
+  if(d.getFullYear() !== new Date().getFullYear()) opt.year='numeric';
+  return d.toLocaleDateString(LOC(), opt);
+};
+// always carries the year — for schedules that run years ahead
+const dstrY = v => new Date(v).toLocaleDateString(LOC(), {day:'numeric',month:'short',year:'numeric'});
 function dur(ms){ if(ms<0)ms=0; const mi=Math.floor(ms/60000),hr=Math.floor(mi/60); return hr<1?mi+t('m'):hr+t('h')+' '+(mi%60)+t('m'); }
 function durS(ms){ const mi=Math.floor(ms/60000),hr=Math.floor(mi/60),dd=Math.floor(hr/24); return dd>=1?dd+t('d'):hr>=1?hr+t('h'):mi+t('m'); }
 const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -944,7 +953,7 @@ function paintNssf(){
     return `<div class="nv ${cls}">
       <button class="nvmain" data-nv="${v.id}">
         <div class="seq">${v.done_at?'✓':v.seq}</div>
-        <div class="mn"><b>${dstr(v.due_date)}${tag}</b>
+        <div class="mn"><b>${dstrY(v.due_date)}${tag}</b>
         <span>${t(CAT[v.category]||'childV')} · ${esc(sub)}</span></div>
         <div class="amt">${money(v.amount||RIEL_PER_VISIT)}</div>
       </button>${strip}</div>`;
@@ -988,9 +997,9 @@ function nssfSheet(v){
   openSheet(`<h3>${t('visitNo')} ${seq}</h3>
     <div class="card" style="margin-top:12px">
       <div class="row"><div class="ic">📅</div><div class="bd">
-        <b>${dstr(v.due_date)}</b><span>${t('apptDate')}</span></div></div>
+        <b>${dstrY(v.due_date)}</b><span>${t('apptDate')}</span></div></div>
       <div class="row"><div class="ic">⏳</div><div class="bd">
-        <b>${dstr(v.window_end||v.due_date)}</b><span>${t('windowEnd')}</span></div></div>
+        <b>${dstrY(v.window_end||v.due_date)}</b><span>${t('windowEnd')}</span></div></div>
       <div class="row"><div class="ic">🏥</div><div class="bd">
         <b>${t(CATKEY[v.category]||'childV')}</b><span>${t('category')}</span></div></div>
       <div class="row"><div class="ic">៛</div><div class="bd">
@@ -1225,7 +1234,7 @@ function paintVax(){
     const tag=late?`<span class="tg due">${t('due')}</span>`:soon?`<span class="tg soon">${t('soon')}</span>`:'';
     return `<div class="vx ${g?'done':''}"><button class="tick ${g?'on':''}" data-vax="${c}">✓</button>
       <div class="in"><b>${LANG==='kh'?kh:en}${tag}</b>
-      <span>${g?'✓ '+dstr(g):dstr(due)}</span></div></div>`;
+      <span>${g?'✓ '+dstrY(g):dstrY(due)}</span></div></div>`;
   }).join('');
 }
 function paintAppts(){
